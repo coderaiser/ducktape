@@ -57,11 +57,13 @@ Test("run_tests: result holds counts", t =>
 
 Test("run_tests: exception in test body fails the test", t =>
 {
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var tests = new List<TestDefinition>
     {
         new("scope: throws", t2 => { t2.Ok(true); throw new InvalidOperationException("oops"); }),
     };
     var r = RunMini(tests);
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", null);
     t.Equal(r.Failed, 1);
     t.End();
 });
@@ -69,12 +71,14 @@ Test("run_tests: exception in test body fails the test", t =>
 Test("run_tests: slow test times out", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_TIMEOUT", "50");
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var tests = new List<TestDefinition>
     {
         new("scope: slow", async t2 => { t2.Ok(true); await Task.Delay(1000); t2.End(); }),
     };
     var r = RunMini(tests);
     Environment.SetEnvironmentVariable("DUCKTAPE_TIMEOUT", null);
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", null);
     t.Equal(r.Failed, 1);
     t.End();
 });

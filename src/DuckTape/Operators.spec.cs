@@ -139,6 +139,9 @@ Test("operators: Fail carries location", t =>
 
 Test("operators: Fail carries stack trace", t =>
 {
-    t.Ok(Operators.Fail(new Exception("x")).Stack.Length > 0);
+    Exception ex;
+    try { throw new Exception("x"); }
+    catch (Exception e) { ex = e; }
+    t.Ok(Operators.Fail(ex).Stack.Length > 0);
     t.End();
 });
