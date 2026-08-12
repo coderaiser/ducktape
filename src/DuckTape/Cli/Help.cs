@@ -6,7 +6,7 @@ public static class Help
         ducktape: supertape-style test runner for C#
 
         Usage:
-          dotnet run --project src/DuckTape -- 'tests/**/*.spec.cs'
+          dotnet run --project src/DuckTape -- 'src/**/*.spec.cs'
 
         Options:
           -h, --help                       show this help

@@ -11,7 +11,7 @@ public static class CliRunner
 {
     public static readonly CliDependencies Default = new(
         TestLoader.Load,
-        () => Test.All,
+        () => Tests.All,
         (format, stream) => FormatterResolver.Resolve(format, format == "progress-bar" ? Console.Error : stream));
 
     public static int Run(string[] argv) => Execute(argv, Console.Out, Console.Error, Default);

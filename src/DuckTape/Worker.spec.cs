@@ -1,7 +1,7 @@
 using DuckTape;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("worker: runs an action", t =>
+Test("worker: runs an action", t =>
 {
     var list = new List<int>();
     Worker.Run(() => list.Add(1));
@@ -9,14 +9,14 @@ Run("worker: runs an action", t =>
     t.End();
 });
 
-Run("worker: returns a value", t =>
+Test("worker: returns a value", t =>
 {
     var value = Worker.Run(() => 42);
     t.Equal(value, 42);
     t.End();
 });
 
-Run("worker: disabled flag reflects env", t =>
+Test("worker: disabled flag reflects env", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", "1");
     var disabled = Worker.Disabled;
@@ -25,7 +25,7 @@ Run("worker: disabled flag reflects env", t =>
     t.End();
 });
 
-Run("worker: disabled mode runs inline", t =>
+Test("worker: disabled mode runs inline", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", "1");
     var ran = false;
@@ -35,7 +35,7 @@ Run("worker: disabled mode runs inline", t =>
     t.End();
 });
 
-Run("worker: disabled mode returns value", t =>
+Test("worker: disabled mode returns value", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", "1");
     var value = Worker.Run(() => "yes");

@@ -1,6 +1,6 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
 List<TestDefinition> Mini(Action<T> fn) =>
     new() { new("t: mini", t2 => { fn(t2); return Task.CompletedTask; }) };
@@ -8,77 +8,77 @@ List<TestDefinition> Mini(Action<T> fn) =>
 RunResult RunMini(List<TestDefinition> tests) =>
     Runner.RunTests(tests, new RecordingFormatter()).GetAwaiter().GetResult();
 
-Run("t: equal passes", t =>
+Test("t: equal passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.Equal(1, 1); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: equal fail increments failed", t =>
+Test("t: equal fail increments failed", t =>
 {
     var r = RunMini(Mini(t2 => { t2.Equal(1, 2); t2.End(); }));
     t.Equal(r.Failed, 1);
     t.End();
 });
 
-Run("t: not_equal passes", t =>
+Test("t: not_equal passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.NotEqual(1, 2); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: ok passes", t =>
+Test("t: ok passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.Ok(true); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: not_ok passes", t =>
+Test("t: not_ok passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.NotOk(0); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: deep_equal passes", t =>
+Test("t: deep_equal passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.DeepEqual(new[] { 1 }, new[] { 1 }); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: match passes", t =>
+Test("t: match passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.Match("hello world", @"world"); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: not_match passes", t =>
+Test("t: not_match passes", t =>
 {
     var r = RunMini(Mini(t2 => { t2.NotMatch("hello", @"world"); t2.End(); }));
     t.Equal(r.Failed, 0);
     t.End();
 });
 
-Run("t: pass assertion counts as pass", t =>
+Test("t: pass assertion counts as pass", t =>
 {
     var r = RunMini(Mini(t2 => { t2.Pass(); t2.End(); }));
     t.Equal(r.Passed, 1);
     t.End();
 });
 
-Run("t: fail assertion records exception", t =>
+Test("t: fail assertion records exception", t =>
 {
     var r = RunMini(Mini(t2 => { t2.Fail(new Exception("boom")); t2.End(); }));
     t.Equal(r.Failed, 1);
     t.End();
 });
 
-Run("t: comment emits a comment event", t =>
+Test("t: comment emits a comment event", t =>
 {
     var rec = new RecordingFormatter();
     var tests = new List<TestDefinition>
@@ -90,7 +90,7 @@ Run("t: comment emits a comment event", t =>
     t.End();
 });
 
-Run("t: assertions count toward the total", t =>
+Test("t: assertions count toward the total", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var r = RunMini(Mini(t2 => { t2.Ok(true); t2.Ok(true); t2.End(); }));
@@ -99,7 +99,7 @@ Run("t: assertions count toward the total", t =>
     t.End();
 });
 
-Run("t: doubling end fails once", t =>
+Test("t: doubling end fails once", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var r = RunMini(Mini(t2 => { t2.Ok(true); t2.End(); t2.End(); }));
@@ -108,7 +108,7 @@ Run("t: doubling end fails once", t =>
     t.End();
 });
 
-Run("t: asserting after end fails once", t =>
+Test("t: asserting after end fails once", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var r = RunMini(Mini(t2 => { t2.Ok(true); t2.End(); t2.Ok(false); }));

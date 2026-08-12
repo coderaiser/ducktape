@@ -1,38 +1,38 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("formatter_resolver: resolves tap", t =>
+Test("formatter_resolver: resolves tap", t =>
 {
     t.Ok(FormatterResolver.Resolve("tap") is TapFormatter);
     t.End();
 });
 
-Run("formatter_resolver: resolves fail", t =>
+Test("formatter_resolver: resolves fail", t =>
 {
     t.Ok(FormatterResolver.Resolve("fail") is FailFormatter);
     t.End();
 });
 
-Run("formatter_resolver: resolves short", t =>
+Test("formatter_resolver: resolves short", t =>
 {
     t.Ok(FormatterResolver.Resolve("short") is ShortFormatter);
     t.End();
 });
 
-Run("formatter_resolver: resolves json-lines", t =>
+Test("formatter_resolver: resolves json-lines", t =>
 {
     t.Ok(FormatterResolver.Resolve("json-lines") is JsonLinesFormatter);
     t.End();
 });
 
-Run("formatter_resolver: resolves progress-bar", t =>
+Test("formatter_resolver: resolves progress-bar", t =>
 {
     t.Ok(FormatterResolver.Resolve("progress-bar") is ProgressBarFormatter);
     t.End();
 });
 
-Run("formatter_resolver: rejects unknown format", t =>
+Test("formatter_resolver: rejects unknown format", t =>
 {
     var threw = false;
     try { FormatterResolver.Resolve("nope"); }
@@ -41,7 +41,7 @@ Run("formatter_resolver: rejects unknown format", t =>
     t.End();
 });
 
-Run("formatter_resolver: honors the stream", t =>
+Test("formatter_resolver: honors the stream", t =>
 {
     var sw = new StringWriter();
     FormatterResolver.Resolve("tap", sw).Emit("start", new { total = 1 });
@@ -49,7 +49,7 @@ Run("formatter_resolver: honors the stream", t =>
     t.End();
 });
 
-Run("formatter_base: bare formatter returns null for every hook", t =>
+Test("formatter_base: bare formatter returns null for every hook", t =>
 {
     var sw = new StringWriter();
     var f = new BareFormatter(sw);
@@ -64,7 +64,7 @@ Run("formatter_base: bare formatter returns null for every hook", t =>
     t.End();
 });
 
-Run("formatter_base: default stream is console", t =>
+Test("formatter_base: default stream is console", t =>
 {
     t.Ok(new BareFormatter() is IFormatter);
     t.End();

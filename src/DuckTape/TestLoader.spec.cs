@@ -1,7 +1,7 @@
 using DuckTape;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("test_loader: compiles and runs a spec file", t =>
+Test("test_loader: compiles and runs a spec file", t =>
 {
     var dir = Directory.CreateTempSubdirectory("ducktape_loader_");
     var marker = Path.Combine(dir.FullName, "ran.txt");
@@ -15,7 +15,7 @@ Run("test_loader: compiles and runs a spec file", t =>
     t.End();
 });
 
-Run("test_loader: runs parameterless entry points", t =>
+Test("test_loader: runs parameterless entry points", t =>
 {
     var dir = Directory.CreateTempSubdirectory("ducktape_loader_");
     var marker = Path.Combine(dir.FullName, "ran.txt");
@@ -29,11 +29,11 @@ Run("test_loader: runs parameterless entry points", t =>
     t.End();
 });
 
-Run("test_loader: compile errors are reported", t =>
+Test("test_loader: compile errors are reported", t =>
 {
     var dir = Directory.CreateTempSubdirectory("ducktape_loader_");
     var spec = Path.Combine(dir.FullName, "bad.spec.cs");
-    File.WriteAllText(spec, "Run(\"loader: broken");
+    File.WriteAllText(spec, "Test(\"loader: broken");
     var threw = false;
     try { TestLoader.Load(spec); }
     catch (InvalidOperationException ex) { threw = ex.Message.Contains("failed to compile"); }
@@ -42,7 +42,7 @@ Run("test_loader: compile errors are reported", t =>
     t.End();
 });
 
-Run("test_loader: missing entry point is reported", t =>
+Test("test_loader: missing entry point is reported", t =>
 {
     var dir = Directory.CreateTempSubdirectory("ducktape_loader_");
     var spec = Path.Combine(dir.FullName, "lib.spec.cs");

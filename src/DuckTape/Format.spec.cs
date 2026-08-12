@@ -1,19 +1,19 @@
 using DuckTape;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("format: AddSpaces prepends six spaces", t =>
+Test("format: AddSpaces prepends six spaces", t =>
 {
     t.Equal(Format.AddSpaces("hi"), "      hi");
     t.End();
 });
 
-Run("format: FormatOutput indents every line", t =>
+Test("format: FormatOutput indents every line", t =>
 {
     t.Equal(Format.FormatOutput("a\nb"), "      a\n      b");
     t.End();
 });
 
-Run("format: FormatOutput keeps empty input", t =>
+Test("format: FormatOutput keeps empty input", t =>
 {
     t.Equal(Format.FormatOutput(""), "");
     t.End();

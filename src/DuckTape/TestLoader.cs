@@ -11,9 +11,18 @@ namespace DuckTape;
 /// </summary>
 public static class TestLoader
 {
+    const string Usings = """
+        global using System;
+        global using System.Collections.Generic;
+        global using System.IO;
+        global using System.Linq;
+        global using System.Threading;
+        global using System.Threading.Tasks;
+        """;
+
     public static void Load(string file)
     {
-        var source = File.ReadAllText(file);
+        var source = Usings + File.ReadAllText(file);
         var tree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Latest));
         var compilation = CSharpCompilation.Create(
             "ducktape_" + Path.GetFileNameWithoutExtension(file),
@@ -47,7 +56,7 @@ public static class TestLoader
             .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
             .Select(p => (MetadataReference)MetadataReference.CreateFromFile(p))
             .ToList();
-        refs.Add(MetadataReference.CreateFromFile(typeof(Test).Assembly.Location));
+        refs.Add(MetadataReference.CreateFromFile(typeof(Tests).Assembly.Location));
         return refs;
     }
 }

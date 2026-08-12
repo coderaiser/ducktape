@@ -1,7 +1,7 @@
 using DuckTape;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("emitter: On/Emit basic", t =>
+Test("emitter: On/Emit basic", t =>
 {
     var calls = new List<int>();
     var e = new Emitter();
@@ -11,7 +11,7 @@ Run("emitter: On/Emit basic", t =>
     t.End();
 });
 
-Run("emitter: Emit forwards data payload", t =>
+Test("emitter: Emit forwards data payload", t =>
 {
     string? received = null;
     var e = new Emitter();
@@ -21,7 +21,7 @@ Run("emitter: Emit forwards data payload", t =>
     t.End();
 });
 
-Run("emitter: Off removes listener", t =>
+Test("emitter: Off removes listener", t =>
 {
     var calls = new List<int>();
     var e = new Emitter();
@@ -33,7 +33,7 @@ Run("emitter: Off removes listener", t =>
     t.End();
 });
 
-Run("emitter: multiple listeners on same event", t =>
+Test("emitter: multiple listeners on same event", t =>
 {
     var calls = new List<int>();
     var e = new Emitter();
@@ -44,7 +44,7 @@ Run("emitter: multiple listeners on same event", t =>
     t.End();
 });
 
-Run("emitter: events without listeners do nothing", t =>
+Test("emitter: events without listeners do nothing", t =>
 {
     var e = new Emitter();
     e.Emit("nothing");
@@ -52,7 +52,7 @@ Run("emitter: events without listeners do nothing", t =>
     t.End();
 });
 
-Run("emitter: Off for unknown event is a noop", t =>
+Test("emitter: Off for unknown event is a noop", t =>
 {
     var e = new Emitter();
     e.Off("nope", _ => { });
@@ -60,7 +60,7 @@ Run("emitter: Off for unknown event is a noop", t =>
     t.End();
 });
 
-Run("emitter: listeners are distinct per event", t =>
+Test("emitter: listeners are distinct per event", t =>
 {
     var a = new List<int>();
     var e = new Emitter();

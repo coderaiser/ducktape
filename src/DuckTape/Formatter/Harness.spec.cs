@@ -1,8 +1,8 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("harness: start routes to Start hook", t =>
+Test("harness: start routes to Start hook", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -11,7 +11,7 @@ Run("harness: start routes to Start hook", t =>
     t.End();
 });
 
-Run("harness: test routes to Test hook", t =>
+Test("harness: test routes to Test hook", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -20,7 +20,7 @@ Run("harness: test routes to Test hook", t =>
     t.End();
 });
 
-Run("harness: test_end routes with all args", t =>
+Test("harness: test_end routes with all args", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -29,7 +29,7 @@ Run("harness: test_end routes with all args", t =>
     t.End();
 });
 
-Run("harness: test_success routes with message", t =>
+Test("harness: test_success routes with message", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -38,7 +38,7 @@ Run("harness: test_success routes with message", t =>
     t.End();
 });
 
-Run("harness: test_fail routes with all fields", t =>
+Test("harness: test_fail routes with all fields", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -47,7 +47,7 @@ Run("harness: test_fail routes with all fields", t =>
     t.End();
 });
 
-Run("harness: comment routes to Comment hook", t =>
+Test("harness: comment routes to Comment hook", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -56,7 +56,7 @@ Run("harness: comment routes to Comment hook", t =>
     t.End();
 });
 
-Run("harness: end routes to End hook then locks", t =>
+Test("harness: end routes to End hook then locks", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -68,7 +68,7 @@ Run("harness: end routes to End hook then locks", t =>
     t.End();
 });
 
-Run("harness: unknown events are ignored", t =>
+Test("harness: unknown events are ignored", t =>
 {
     var rec = new RecordingFormatter();
     var h = new Harness(rec, new StringWriter());
@@ -77,7 +77,7 @@ Run("harness: unknown events are ignored", t =>
     t.End();
 });
 
-Run("harness: null results are not written", t =>
+Test("harness: null results are not written", t =>
 {
     var sw = new StringWriter();
     var h = new Harness(new RecordingFormatter(), sw);
@@ -86,7 +86,7 @@ Run("harness: null results are not written", t =>
     t.End();
 });
 
-Run("harness: pipe redirects the stream", t =>
+Test("harness: pipe redirects the stream", t =>
 {
     var f = new EchoFormatter();
     var sw1 = new StringWriter();

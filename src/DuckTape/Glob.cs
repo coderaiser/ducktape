@@ -7,16 +7,25 @@ public static class Glob
 {
     public static List<string> Expand(string pattern)
     {
-        var normalized = pattern.Replace('\\', '/');
+        var normalized = Normalize(pattern);
         var root = StaticRoot(normalized);
         if (root.Length == 0) root = ".";
         if (!Directory.Exists(root)) return new();
 
-        var regex = new Regex(BuildRegex(normalized), RegexOptions.Compiled);
-        var results = Directory
-            .EnumerateFiles(root, "*", SearchOption.AllDirectories)
-            .Where(f => regex.IsMatch(Normalize(f)))
-            .ToList();
+        var prefix = root == "." ? "" : root + "/";
+        var tail = root == "." ? normalized : normalized.Substring(root.Length).TrimStart('/');
+        var regex = new Regex(BuildRegex(tail), RegexOptions.Compiled);
+
+        var results = new List<string>();
+        foreach (var f in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories))
+        {
+            var nf = Normalize(f);
+            var rel = root == "."
+                ? nf
+                : nf.StartsWith(prefix, StringComparison.Ordinal) ? nf.Substring(prefix.Length) : null;
+            if (rel is null || !regex.IsMatch(rel)) continue;
+            results.Add(prefix + rel);
+        }
         results.Sort(StringComparer.Ordinal);
         return results;
     }
@@ -25,15 +34,14 @@ public static class Glob
 
     static string StaticRoot(string pattern)
     {
-        var sb = new StringBuilder();
-        foreach (var s in pattern.Split('/'))
+        int firstWildcard = -1;
+        for (int i = 0; i < pattern.Length; i++)
         {
-            if (s.Length == 0) continue;
-            if (s.Contains('*') || s.Contains('?')) break;
-            if (sb.Length > 0) sb.Append('/');
-            sb.Append(s);
+            if (pattern[i] == '*' || pattern[i] == '?') { firstWildcard = i; break; }
         }
-        return sb.ToString();
+        if (firstWildcard < 0) return pattern;
+        var lastSlash = pattern.LastIndexOf('/', firstWildcard);
+        return lastSlash < 0 ? "" : pattern.Substring(0, lastSlash);
     }
 
     static string BuildRegex(string pattern)
@@ -51,10 +59,15 @@ public static class Glob
                 if (n >= 2)
                 {
                     if (j < chars.Length && chars[j] == '/')
+                    {
                         sb.Append("(?:.*/)?");
+                        i = j;
+                    }
                     else
+                    {
                         sb.Append(".*");
-                    i = j - 1;
+                        i = j - 1;
+                    }
                 }
                 else
                 {

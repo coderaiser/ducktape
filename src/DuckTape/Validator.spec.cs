@@ -1,10 +1,10 @@
 using DuckTape;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
 List<TestDefinition> MakeTests(string msg) =>
     new() { new(msg, _ => Task.CompletedTask) };
 
-Run("validator: passes when one assertion", t =>
+Test("validator: passes when one assertion", t =>
 {
     var tests = MakeTests("scope: subject");
     var v = new Validator(tests);
@@ -12,7 +12,7 @@ Run("validator: passes when one assertion", t =>
     t.End();
 });
 
-Run("validator: fails when zero assertions", t =>
+Test("validator: fails when zero assertions", t =>
 {
     var tests = MakeTests("scope: zero");
     var v = new Validator(tests);
@@ -20,7 +20,7 @@ Run("validator: fails when zero assertions", t =>
     t.End();
 });
 
-Run("validator: fails when more than one assertion", t =>
+Test("validator: fails when more than one assertion", t =>
 {
     var tests = MakeTests("scope: many");
     var v = new Validator(tests);
@@ -28,7 +28,7 @@ Run("validator: fails when more than one assertion", t =>
     t.End();
 });
 
-Run("validator: duplicate message is reported", t =>
+Test("validator: duplicate message is reported", t =>
 {
     var tests = new List<TestDefinition>
     {
@@ -40,7 +40,7 @@ Run("validator: duplicate message is reported", t =>
     t.End();
 });
 
-Run("validator: duplicate reported only once", t =>
+Test("validator: duplicate reported only once", t =>
 {
     var tests = new List<TestDefinition>
     {
@@ -53,7 +53,7 @@ Run("validator: duplicate reported only once", t =>
     t.End();
 });
 
-Run("validator: single message is not duplicate", t =>
+Test("validator: single message is not duplicate", t =>
 {
     var tests = MakeTests("scope: single");
     var v = new Validator(tests);
@@ -61,7 +61,7 @@ Run("validator: single message is not duplicate", t =>
     t.End();
 });
 
-Run("validator: duplicate check can be disabled", t =>
+Test("validator: duplicate check can be disabled", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_DUPLICATES", "0");
     var tests = new List<TestDefinition>
@@ -76,7 +76,7 @@ Run("validator: duplicate check can be disabled", t =>
     t.End();
 });
 
-Run("validator: assertion count check can be disabled", t =>
+Test("validator: assertion count check can be disabled", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var tests = MakeTests("scope: offn");
@@ -87,7 +87,7 @@ Run("validator: assertion count check can be disabled", t =>
     t.End();
 });
 
-Run("validator: error carries first duplicate location", t =>
+Test("validator: error carries first duplicate location", t =>
 {
     var tests = new List<TestDefinition>
     {

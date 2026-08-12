@@ -1,7 +1,7 @@
 using DuckTape.Cli;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("args: default format outside CI is progress-bar", t =>
+Test("args: default format outside CI is progress-bar", t =>
 {
     Environment.SetEnvironmentVariable("CI", null);
     var args = ArgParser.Parse(Array.Empty<string>());
@@ -9,7 +9,7 @@ Run("args: default format outside CI is progress-bar", t =>
     t.End();
 });
 
-Run("args: default format in CI is tap", t =>
+Test("args: default format in CI is tap", t =>
 {
     Environment.SetEnvironmentVariable("CI", "1");
     var args = ArgParser.Parse(Array.Empty<string>());
@@ -18,21 +18,21 @@ Run("args: default format in CI is tap", t =>
     t.End();
 });
 
-Run("args: -f flag overrides default", t =>
+Test("args: -f flag overrides default", t =>
 {
     var args = ArgParser.Parse(new[] { "-f", "fail" });
     t.Equal(args.Format, "fail");
     t.End();
 });
 
-Run("args: --format flag overrides default", t =>
+Test("args: --format flag overrides default", t =>
 {
     var args = ArgParser.Parse(new[] { "--format", "short" });
     t.Equal(args.Format, "short");
     t.End();
 });
 
-Run("args: every valid format is accepted", t =>
+Test("args: every valid format is accepted", t =>
 {
     var ok = true;
     foreach (var f in new[] { "tap", "fail", "short", "progress-bar", "json-lines" })
@@ -41,70 +41,70 @@ Run("args: every valid format is accepted", t =>
     t.End();
 });
 
-Run("args: --no-worker sets flag", t =>
+Test("args: --no-worker sets flag", t =>
 {
     var args = ArgParser.Parse(new[] { "--no-worker" });
     t.Ok(args.NoWorker);
     t.End();
 });
 
-Run("args: --no-check-duplicates sets flag", t =>
+Test("args: --no-check-duplicates sets flag", t =>
 {
     var args = ArgParser.Parse(new[] { "--no-check-duplicates" });
     t.Ok(args.NoCheckDuplicates);
     t.End();
 });
 
-Run("args: --no-check-assertions-count sets flag", t =>
+Test("args: --no-check-assertions-count sets flag", t =>
 {
     var args = ArgParser.Parse(new[] { "--no-check-assertions-count" });
     t.Ok(args.NoCheckAssertionsCount);
     t.End();
 });
 
-Run("args: -h sets help", t =>
+Test("args: -h sets help", t =>
 {
     var args = ArgParser.Parse(new[] { "-h" });
     t.Ok(args.Help);
     t.End();
 });
 
-Run("args: --help sets help", t =>
+Test("args: --help sets help", t =>
 {
     var args = ArgParser.Parse(new[] { "--help" });
     t.Ok(args.Help);
     t.End();
 });
 
-Run("args: -v sets version", t =>
+Test("args: -v sets version", t =>
 {
     var args = ArgParser.Parse(new[] { "-v" });
     t.Ok(args.Version);
     t.End();
 });
 
-Run("args: --version sets version", t =>
+Test("args: --version sets version", t =>
 {
     var args = ArgParser.Parse(new[] { "--version" });
     t.Ok(args.Version);
     t.End();
 });
 
-Run("args: positional values become patterns", t =>
+Test("args: positional values become patterns", t =>
 {
     var args = ArgParser.Parse(new[] { "a", "b" });
     t.DeepEqual(args.Patterns, new[] { "a", "b" });
     t.End();
 });
 
-Run("args: no patterns by default", t =>
+Test("args: no patterns by default", t =>
 {
     var args = ArgParser.Parse(Array.Empty<string>());
     t.Equal(args.Patterns.Length, 0);
     t.End();
 });
 
-Run("args: unknown format throws", t =>
+Test("args: unknown format throws", t =>
 {
     var threw = false;
     try { ArgParser.Parse(new[] { "-f", "junit" }); }
@@ -113,7 +113,7 @@ Run("args: unknown format throws", t =>
     t.End();
 });
 
-Run("args: missing format value throws", t =>
+Test("args: missing format value throws", t =>
 {
     var threw = false;
     try { ArgParser.Parse(new[] { "-f" }); }

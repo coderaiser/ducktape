@@ -1,13 +1,13 @@
 namespace DuckTape;
 
-public static class Test
+public static class Tests
 {
     static readonly List<TestDefinition> _tests = new();
 
-    public static void Run(string message, Func<T, Task> fn, bool skip = false, bool only = false) =>
+    public static void Test(string message, Func<T, Task> fn, bool skip = false, bool only = false) =>
         Add(message, fn, skip, only);
 
-    public static void Run(string message, Action<T> fn, bool skip = false, bool only = false) =>
+    public static void Test(string message, Action<T> fn, bool skip = false, bool only = false) =>
         Add(message, t => { fn(t); return Task.CompletedTask; }, skip, only);
 
     public static void Only(string message, Action<T> fn) => Add(message, t => { fn(t); return Task.CompletedTask; }, false, true);

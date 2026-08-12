@@ -1,8 +1,8 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("fail: test names are silent", t =>
+Test("fail: test names are silent", t =>
 {
     var sw = new StringWriter();
     var f = new FailFormatter(sw);
@@ -12,7 +12,7 @@ Run("fail: test names are silent", t =>
     t.End();
 });
 
-Run("fail: successes are silent", t =>
+Test("fail: successes are silent", t =>
 {
     var sw = new StringWriter();
     var f = new FailFormatter(sw);
@@ -22,7 +22,7 @@ Run("fail: successes are silent", t =>
     t.End();
 });
 
-Run("fail: failures are shown", t =>
+Test("fail: failures are shown", t =>
 {
     var sw = new StringWriter();
     var f = new FailFormatter(sw);
@@ -31,7 +31,7 @@ Run("fail: failures are shown", t =>
     t.End();
 });
 
-Run("fail: comments are inherited from tap", t =>
+Test("fail: comments are inherited from tap", t =>
 {
     var sw = new StringWriter();
     var f = new FailFormatter(sw);
@@ -40,7 +40,7 @@ Run("fail: comments are inherited from tap", t =>
     t.End();
 });
 
-Run("fail: summary is inherited from tap", t =>
+Test("fail: summary is inherited from tap", t =>
 {
     var sw = new StringWriter();
     var f = new FailFormatter(sw);
@@ -49,7 +49,7 @@ Run("fail: summary is inherited from tap", t =>
     t.End();
 });
 
-Run("fail: test_end emits nothing extra", t =>
+Test("fail: test_end emits nothing extra", t =>
 {
     var sw = new StringWriter();
     var f = new FailFormatter(sw);

@@ -1,14 +1,14 @@
 using DuckTape;
 using DuckTape.Cli;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
 CliDependencies NoopDeps(List<TestDefinition>? tests = null) => new(
     _ => { },
     () => tests ?? new List<TestDefinition>(),
     (_, s) => new TapFormatter(s));
 
-Run("cli: help prints usage and exits ok", t =>
+Test("cli: help prints usage and exits ok", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -17,7 +17,7 @@ Run("cli: help prints usage and exits ok", t =>
     t.End();
 });
 
-Run("cli: --help prints usage too", t =>
+Test("cli: --help prints usage too", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -26,7 +26,7 @@ Run("cli: --help prints usage too", t =>
     t.End();
 });
 
-Run("cli: version prints the version", t =>
+Test("cli: version prints the version", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -35,7 +35,7 @@ Run("cli: version prints the version", t =>
     t.End();
 });
 
-Run("cli: no matches is invalid option", t =>
+Test("cli: no matches is invalid option", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -44,7 +44,7 @@ Run("cli: no matches is invalid option", t =>
     t.End();
 });
 
-Run("cli: invalid format is invalid option", t =>
+Test("cli: invalid format is invalid option", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -53,7 +53,7 @@ Run("cli: invalid format is invalid option", t =>
     t.End();
 });
 
-Run("cli: passing suite exits zero", t =>
+Test("cli: passing suite exits zero", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -69,7 +69,7 @@ Run("cli: passing suite exits zero", t =>
     t.End();
 });
 
-Run("cli: failing suite exits one", t =>
+Test("cli: failing suite exits one", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -85,7 +85,7 @@ Run("cli: failing suite exits one", t =>
     t.End();
 });
 
-Run("cli: loader errors are surfaced as failures", t =>
+Test("cli: loader errors are surfaced as failures", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -101,7 +101,7 @@ Run("cli: loader errors are surfaced as failures", t =>
     t.End();
 });
 
-Run("cli: skipped tests honour check flag", t =>
+Test("cli: skipped tests honour check flag", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_SKIPPED", "1");
     var sw = new StringWriter();
@@ -119,7 +119,7 @@ Run("cli: skipped tests honour check flag", t =>
     t.End();
 });
 
-Run("cli: no_check_duplicates writes env before exit", t =>
+Test("cli: no_check_duplicates writes env before exit", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -130,7 +130,7 @@ Run("cli: no_check_duplicates writes env before exit", t =>
     t.End();
 });
 
-Run("cli: no_check_assertions_count writes env", t =>
+Test("cli: no_check_assertions_count writes env", t =>
 {
     var sw = new StringWriter();
     var err = new StringWriter();
@@ -141,14 +141,14 @@ Run("cli: no_check_assertions_count writes env", t =>
     t.End();
 });
 
-Run("cli: default deps resolve non bar formats to stdout", t =>
+Test("cli: default deps resolve non bar formats to stdout", t =>
 {
     var resolved = CliRunner.Default.Resolve("tap", new StringWriter());
     t.Ok(resolved is TapFormatter);
     t.End();
 });
 
-Run("cli: plain run routes to console", t =>
+Test("cli: plain run routes to console", t =>
 {
     var code = CliRunner.Run(new[] { "-h" });
     t.Equal(code, ExitCodes.Ok);

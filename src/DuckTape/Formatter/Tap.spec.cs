@@ -1,8 +1,8 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("tap: start prints the tap header", t =>
+Test("tap: start prints the tap header", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -11,7 +11,7 @@ Run("tap: start prints the tap header", t =>
     t.End();
 });
 
-Run("tap: test prints a comment header", t =>
+Test("tap: test prints a comment header", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -20,7 +20,7 @@ Run("tap: test prints a comment header", t =>
     t.End();
 });
 
-Run("tap: success prints an ok line", t =>
+Test("tap: success prints an ok line", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -30,7 +30,7 @@ Run("tap: success prints an ok line", t =>
     t.End();
 });
 
-Run("tap: comment prints a comment line", t =>
+Test("tap: comment prints a comment line", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -39,7 +39,7 @@ Run("tap: comment prints a comment line", t =>
     t.End();
 });
 
-Run("tap: fail without output prints expected and result and stack", t =>
+Test("tap: fail without output prints expected and result and stack", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -49,7 +49,7 @@ Run("tap: fail without output prints expected and result and stack", t =>
     t.End();
 });
 
-Run("tap: fail with output prints the output", t =>
+Test("tap: fail with output prints the output", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -59,7 +59,7 @@ Run("tap: fail with output prints the output", t =>
     t.End();
 });
 
-Run("tap: fail includes the location", t =>
+Test("tap: fail includes the location", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -68,7 +68,7 @@ Run("tap: fail includes the location", t =>
     t.End();
 });
 
-Run("tap: end prints the plan and ok", t =>
+Test("tap: end prints the plan and ok", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -78,7 +78,7 @@ Run("tap: end prints the plan and ok", t =>
     t.End();
 });
 
-Run("tap: end includes skip line", t =>
+Test("tap: end includes skip line", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -87,7 +87,7 @@ Run("tap: end includes skip line", t =>
     t.End();
 });
 
-Run("tap: end includes fail line without ok", t =>
+Test("tap: end includes fail line without ok", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);
@@ -96,7 +96,7 @@ Run("tap: end includes fail line without ok", t =>
     t.End();
 });
 
-Run("tap: test_end produces no output", t =>
+Test("tap: test_end produces no output", t =>
 {
     var sw = new StringWriter();
     var f = new TapFormatter(sw);

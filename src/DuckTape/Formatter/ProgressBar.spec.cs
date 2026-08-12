@@ -1,6 +1,6 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
 ProgressBarFormatter Bar(StringWriter sw)
 {
@@ -10,7 +10,7 @@ ProgressBarFormatter Bar(StringWriter sw)
     return new ProgressBarFormatter(sw);
 }
 
-Run("progress_bar: forced bar starts at zero percent", t =>
+Test("progress_bar: forced bar starts at zero percent", t =>
 {
     var sw = new StringWriter();
     var f = Bar(sw);
@@ -19,7 +19,7 @@ Run("progress_bar: forced bar starts at zero percent", t =>
     t.End();
 });
 
-Run("progress_bar: success advances the bar", t =>
+Test("progress_bar: success advances the bar", t =>
 {
     var sw = new StringWriter();
     var f = Bar(sw);
@@ -29,7 +29,7 @@ Run("progress_bar: success advances the bar", t =>
     t.End();
 });
 
-Run("progress_bar: fail shows stack when enabled", t =>
+Test("progress_bar: fail shows stack when enabled", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_STACK", "1");
     var sw = new StringWriter();
@@ -41,7 +41,7 @@ Run("progress_bar: fail shows stack when enabled", t =>
     t.End();
 });
 
-Run("progress_bar: fail hides stack when disabled", t =>
+Test("progress_bar: fail hides stack when disabled", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_STACK", "0");
     var sw = new StringWriter();
@@ -53,7 +53,7 @@ Run("progress_bar: fail hides stack when disabled", t =>
     t.End();
 });
 
-Run("progress_bar: end summarizes the run", t =>
+Test("progress_bar: end summarizes the run", t =>
 {
     var sw = new StringWriter();
     var f = Bar(sw);
@@ -65,7 +65,7 @@ Run("progress_bar: end summarizes the run", t =>
     t.End();
 });
 
-Run("progress_bar: zero total renders safely", t =>
+Test("progress_bar: zero total renders safely", t =>
 {
     var sw = new StringWriter();
     var f = Bar(sw);
@@ -74,7 +74,7 @@ Run("progress_bar: zero total renders safely", t =>
     t.End();
 });
 
-Run("progress_bar: test and comment are silent in bar mode", t =>
+Test("progress_bar: test and comment are silent in bar mode", t =>
 {
     var sw = new StringWriter();
     var f = Bar(sw);
@@ -86,7 +86,7 @@ Run("progress_bar: test and comment are silent in bar mode", t =>
     t.End();
 });
 
-Run("progress_bar: ci forces tap fallback", t =>
+Test("progress_bar: ci forces tap fallback", t =>
 {
     Environment.SetEnvironmentVariable("CI", "1");
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
@@ -98,7 +98,7 @@ Run("progress_bar: ci forces tap fallback", t =>
     t.End();
 });
 
-Run("progress_bar: force off falls back to tap", t =>
+Test("progress_bar: force off falls back to tap", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", "0");
     Environment.SetEnvironmentVariable("CI", null);
@@ -111,7 +111,7 @@ Run("progress_bar: force off falls back to tap", t =>
     t.End();
 });
 
-Run("progress_bar: below minimum falls back to tap", t =>
+Test("progress_bar: below minimum falls back to tap", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
     Environment.SetEnvironmentVariable("CI", null);

@@ -1,8 +1,8 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Test;
+using static DuckTape.Tests;
 
-Run("json_lines: start emits one json object", t =>
+Test("json_lines: start emits one json object", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
@@ -11,7 +11,7 @@ Run("json_lines: start emits one json object", t =>
     t.End();
 });
 
-Run("json_lines: test is silent", t =>
+Test("json_lines: test is silent", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
@@ -20,7 +20,7 @@ Run("json_lines: test is silent", t =>
     t.End();
 });
 
-Run("json_lines: test_end emits progress json", t =>
+Test("json_lines: test_end emits progress json", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
@@ -30,7 +30,7 @@ Run("json_lines: test_end emits progress json", t =>
     t.End();
 });
 
-Run("json_lines: success is silent", t =>
+Test("json_lines: success is silent", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
@@ -39,7 +39,7 @@ Run("json_lines: success is silent", t =>
     t.End();
 });
 
-Run("json_lines: fail emits failure json", t =>
+Test("json_lines: fail emits failure json", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
@@ -49,7 +49,7 @@ Run("json_lines: fail emits failure json", t =>
     t.End();
 });
 
-Run("json_lines: comment emits comment json", t =>
+Test("json_lines: comment emits comment json", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
@@ -58,7 +58,7 @@ Run("json_lines: comment emits comment json", t =>
     t.End();
 });
 
-Run("json_lines: end emits summary json", t =>
+Test("json_lines: end emits summary json", t =>
 {
     var sw = new StringWriter();
     var f = new JsonLinesFormatter(sw);
