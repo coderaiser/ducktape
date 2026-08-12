@@ -22,6 +22,7 @@ public class ProgressBarFormatter : FormatterBase
     bool BarAllowed(int total)
     {
         var force = Environment.GetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR");
+        if (force == "1") return true;
         if (force == "0") return false;
         if (Environment.GetEnvironmentVariable("CI") == "1") return false;
         var min = int.TryParse(Environment.GetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_MIN"), out var m) ? m : 100;

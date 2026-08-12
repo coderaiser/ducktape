@@ -13,12 +13,14 @@ public record TestState(
 public static class Operators
 {
     public static TestState Ok(object? result, string message = "should be truthy") =>
-        new(result is not null && result is not false && result is not 0,
-            message, result, true);
+        new(!IsFalsy(result), message, result, true);
 
     public static TestState NotOk(object? result, string message = "should be falsy") =>
-        new(result is null || result is false || result is 0,
-            message, result, false);
+        new(IsFalsy(result), message, result, false);
+
+    static bool IsFalsy(object? result) =>
+        result is null || result is false || result is 0 ||
+        result is string s && s.Length == 0;
 
     public static TestState Equal<T>(T result, T expected, string message = "should equal")
     {
