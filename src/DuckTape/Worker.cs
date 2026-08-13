@@ -11,13 +11,21 @@ public static class Worker
 
     public static void Run(Action action)
     {
-        if (Disabled) { action(); return; }
-        Task.Run(action).GetAwaiter().GetResult();
+        if (Disabled)
+        {
+            action();
+            return;
+        }
+
+        var task = Task.Run(action);
+        task.GetAwaiter().GetResult();
     }
 
     public static TResult Run<TResult>(Func<TResult> fn)
     {
         if (Disabled) return fn();
-        return Task.Run(fn).GetAwaiter().GetResult();
+
+        var task = Task.Run(fn);
+        return task.GetAwaiter().GetResult();
     }
 }
