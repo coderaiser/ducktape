@@ -123,3 +123,27 @@ Test("progress_bar: below minimum falls back to tap", t =>
     t.Ok(sw.ToString().Contains("TAP version 13"));
     t.End();
 });
+
+Test("progress_bar: bar allowed when total meets minimum", t =>
+{
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
+    Environment.SetEnvironmentVariable("CI", null);
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_MIN", "1");
+    var sw = new StringWriter();
+    var f = new ProgressBarFormatter(sw);
+    f.Emit("start", new { total = 1 });
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_MIN", null);
+    t.Ok(sw.ToString().Contains("[") && sw.ToString().Contains("0%") && !sw.ToString().Contains("TAP"));
+    t.End();
+});
+
+Test("progress_bar: test_end is silent in bar mode", t =>
+{
+    var sw = new StringWriter();
+    var f = Bar(sw);
+    f.Emit("start", new { total = 1 });
+    var before = sw.ToString().Length;
+    f.Emit("test:end", new { count = 1, total = 1, failed = 0, test = "pb: end" });
+    t.Equal(sw.ToString().Length, before);
+    t.End();
+});
