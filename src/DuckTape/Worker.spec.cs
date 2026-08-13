@@ -48,7 +48,7 @@ Test("worker: action runs on a worker thread by default", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", null);
     var flag = false;
-    Worker.Run(() => flag = true);
+    Worker.Run(() => { flag = true; });
     t.Ok(flag);
     t.End();
 });
