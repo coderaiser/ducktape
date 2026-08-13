@@ -43,3 +43,20 @@ Test("worker: disabled mode returns value", t =>
     t.Equal(value, "yes");
     t.End();
 });
+
+Test("worker: action runs on a worker thread by default", t =>
+{
+    Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", null);
+    var flag = false;
+    Worker.Run(() => flag = true);
+    t.Ok(flag);
+    t.End();
+});
+
+Test("worker: func runs on a worker thread and returns", t =>
+{
+    Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", null);
+    var value = Worker.Run(() => 7);
+    t.Equal(value, 7);
+    t.End();
+});
