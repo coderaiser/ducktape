@@ -22,16 +22,29 @@ public static class TestLoader
 
     public static void Load(string file)
     {
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        sw.Stop();
+        var t0 = sw.Elapsed.TotalMilliseconds;
+        sw.Restart();
         var source = Usings + File.ReadAllText(file);
         var tree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Latest));
+        sw.Stop();
+        var tParse = sw.Elapsed.TotalMilliseconds;
+        sw.Restart();
+        var refs = References();
+        sw.Stop();
+        var tRefs = sw.Elapsed.TotalMilliseconds;
+        sw.Restart();
         var compilation = CSharpCompilation.Create(
             "ducktape_" + Path.GetFileNameWithoutExtension(file),
             new[] { tree },
-            References(),
+            refs,
             new CSharpCompilationOptions(OutputKind.ConsoleApplication));
 
         using var ms = new MemoryStream();
         var emit = compilation.Emit(ms);
+        sw.Stop();
+        var tEmit = sw.Elapsed.TotalMilliseconds;
         if (!emit.Success)
         {
             var errors = string.Join("\n", emit.Diagnostics
@@ -40,6 +53,7 @@ public static class TestLoader
             throw new InvalidOperationException($"ducktape: failed to compile {file}\n{errors}");
         }
 
+        sw.Restart();
         ms.Position = 0;
         var asm = AssemblyLoadContext.Default.LoadFromStream(ms);
         var entry = asm.EntryPoint!;
@@ -47,6 +61,8 @@ public static class TestLoader
             ? Array.Empty<object?>()
             : new object?[] { Array.Empty<string>() };
         entry.Invoke(null, argv);
+        sw.Stop();
+        System.Console.Error.WriteLine($"[timing] {Path.GetFileName(file)} parse={tParse:F0}ms refs={tRefs:F0}ms emit={tEmit:F0}ms load+invoke={sw.Elapsed.TotalMilliseconds:F0}ms");
     }
 
     static List<MetadataReference> References()
