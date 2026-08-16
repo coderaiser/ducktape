@@ -1,8 +1,10 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Tests;
+using static DuckTape.Test;
 
-Test("short: start is silent", t =>
+var test = CreateTest();
+
+test("short: start is silent", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -11,7 +13,7 @@ Test("short: start is silent", t =>
     t.End();
 });
 
-Test("short: test prints a chevron line", t =>
+test("short: test prints a chevron line", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -20,7 +22,7 @@ Test("short: test prints a chevron line", t =>
     t.End();
 });
 
-Test("short: success prints an ok summary", t =>
+test("short: success prints an ok summary", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -29,7 +31,7 @@ Test("short: success prints an ok summary", t =>
     t.End();
 });
 
-Test("short: comment prints a comment line", t =>
+test("short: comment prints a comment line", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -38,7 +40,7 @@ Test("short: comment prints a comment line", t =>
     t.End();
 });
 
-Test("short: fail prints a detailed block", t =>
+test("short: fail prints a detailed block", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -48,7 +50,7 @@ Test("short: fail prints a detailed block", t =>
     t.End();
 });
 
-Test("short: fail includes location and stack", t =>
+test("short: fail includes location and stack", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -58,7 +60,7 @@ Test("short: fail includes location and stack", t =>
     t.End();
 });
 
-Test("short: fail prints output when present", t =>
+test("short: fail prints output when present", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -67,7 +69,7 @@ Test("short: fail prints output when present", t =>
     t.End();
 });
 
-Test("short: end prints a passing summary", t =>
+test("short: end prints a passing summary", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);
@@ -77,7 +79,7 @@ Test("short: end prints a passing summary", t =>
     t.End();
 });
 
-Test("short: end prints fail and skip lines", t =>
+test("short: end prints fail and skip lines", t =>
 {
     var sw = new StringWriter();
     var f = new ShortFormatter(sw);

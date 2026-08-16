@@ -1,0 +1,44 @@
+version: '3'
+
+vars:
+  PROJECT: src/DuckTape
+  SPECS: "'src/**/*.spec.cs'"
+
+tasks:
+  build:
+    desc: Build the project
+    cmds:
+      - dotnet build {{.PROJECT}}
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
+  lint:
+    desc: Check formatting — no changes written
+    cmds:
+      - dotnet format {{.PROJECT}} --verify-no-changes --severity warn
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
+  test:
+    desc: Run all spec files
+    cmds:
+      - dotnet run --project {{.PROJECT}} -- {{.SPECS}}
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      CI: "1"
+
+  coverage:
+    desc: Measure line coverage with coverlet; fail below 100%
+    cmds:
+      - dotnet build {{.PROJECT}}
+      - coverlet {{.PROJECT}}/bin/Debug/net10.0/ducktape.dll
+          --target {{.PROJECT}}/bin/Debug/net10.0/ducktape
+          --targetargs {{.SPECS}}
+          --format cobertura
+          --output coverage.xml
+          --include-test-assembly
+          --threshold 100
+          --threshold-type line
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      CI: "1"

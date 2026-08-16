@@ -1,5 +1,7 @@
 using DuckTape;
-using static DuckTape.Tests;
+using static DuckTape.Test;
+
+var test = CreateTest();
 
 string Root()
 {
@@ -13,7 +15,7 @@ string Root()
     return dir.FullName;
 }
 
-Test("glob: single star matches top level only", t =>
+test("glob: single star matches top level only", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "*.spec.cs"));
@@ -22,7 +24,7 @@ Test("glob: single star matches top level only", t =>
     t.End();
 });
 
-Test("glob: double star reaches nested files", t =>
+test("glob: double star reaches nested files", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "**", "*.spec.cs"));
@@ -37,7 +39,7 @@ Test("glob: double star reaches nested files", t =>
     t.End();
 });
 
-Test("glob: double star can pin a file name", t =>
+test("glob: double star can pin a file name", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "**", "b.spec.cs"));
@@ -46,7 +48,7 @@ Test("glob: double star can pin a file name", t =>
     t.End();
 });
 
-Test("glob: question mark matches a single char", t =>
+test("glob: question mark matches a single char", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "?.spec.cs"));
@@ -55,7 +57,7 @@ Test("glob: question mark matches a single char", t =>
     t.End();
 });
 
-Test("glob: directory scoped pattern ignores siblings", t =>
+test("glob: directory scoped pattern ignores siblings", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "dir1", "*.spec.cs"));
@@ -64,7 +66,7 @@ Test("glob: directory scoped pattern ignores siblings", t =>
     t.End();
 });
 
-Test("glob: nested files are not top level matches", t =>
+test("glob: nested files are not top level matches", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "dir2", "*.spec.cs"));
@@ -73,7 +75,7 @@ Test("glob: nested files are not top level matches", t =>
     t.End();
 });
 
-Test("glob: missing root yields nothing", t =>
+test("glob: missing root yields nothing", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "missing", "**", "*.spec.cs"));
@@ -82,7 +84,7 @@ Test("glob: missing root yields nothing", t =>
     t.End();
 });
 
-Test("glob: double star alone matches everything under root", t =>
+test("glob: double star alone matches everything under root", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "**"));
@@ -91,7 +93,7 @@ Test("glob: double star alone matches everything under root", t =>
     t.End();
 });
 
-Test("glob: other extensions are matched by pattern", t =>
+test("glob: other extensions are matched by pattern", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "*", "*.txt"));

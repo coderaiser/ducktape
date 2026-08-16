@@ -29,12 +29,13 @@ public static class ArgParser
         {
             switch (argv[i])
             {
-                case "-h": case "--help":                    help = true;    break;
-                case "-v": case "--version":                 version = true; break;
-                case "--no-worker":                          noWorker = true; break;
-                case "--no-check-duplicates":                noDupes  = true; break;
-                case "--no-check-assertions-count":          noCount  = true; break;
-                case "-f": case "--format":
+                case "-h": case "--help": help = true; break;
+                case "-v": case "--version": version = true; break;
+                case "--no-worker": noWorker = true; break;
+                case "--no-check-duplicates": noDupes = true; break;
+                case "--no-check-assertions-count": noCount = true; break;
+                case "-f":
+                case "--format":
                     if (i + 1 >= argv.Length)
                         throw new InvalidFormatException("ducktape: --format requires a value");
                     format = argv[++i];

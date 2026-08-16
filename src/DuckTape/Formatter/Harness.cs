@@ -20,19 +20,19 @@ public class Harness
 
         string? result = @event switch
         {
-            "start"        => _formatter.Start(GetInt(data, "total")),
-            "test"         => _formatter.Test(GetString(data, "test")),
-            "test:end"     => _formatter.TestEnd(GetInt(data, "count"), GetInt(data, "total"),
+            "start" => _formatter.Start(GetInt(data, "total")),
+            "test" => _formatter.Test(GetString(data, "test")),
+            "test:end" => _formatter.TestEnd(GetInt(data, "count"), GetInt(data, "total"),
                                                   GetInt(data, "failed"), GetString(data, "test")),
             "test:success" => _formatter.Success(GetInt(data, "count"), GetString(data, "message")),
-            "test:fail"    => _formatter.Fail(GetString(data, "at"), GetInt(data, "count"),
+            "test:fail" => _formatter.Fail(GetString(data, "at"), GetInt(data, "count"),
                                                GetString(data, "message"), GetString(data, "operator"),
                                                Get(data, "result"), Get(data, "expected"),
                                                GetString(data, "output"), GetString(data, "error_stack")),
-            "comment"      => _formatter.Comment(GetString(data, "message")),
-            "end"          => _formatter.End(GetInt(data, "count"), GetInt(data, "passed"),
+            "comment" => _formatter.Comment(GetString(data, "message")),
+            "end" => _formatter.End(GetInt(data, "count"), GetInt(data, "passed"),
                                               GetInt(data, "failed"), GetInt(data, "skipped")),
-            _              => null,
+            _ => null,
         };
 
         if (result is not null)

@@ -20,7 +20,15 @@ public class JsonLinesFormatter : FormatterBase
     {
         var payload = JsonSerializer.Serialize(new
         {
-            type = "fail", at, count, message, @operator, result, expected, output, error_stack = errorStack,
+            type = "fail",
+            at,
+            count,
+            message,
+            @operator,
+            result,
+            expected,
+            output,
+            error_stack = errorStack,
         });
         return payload + "\n";
     }

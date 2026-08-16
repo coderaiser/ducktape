@@ -22,29 +22,19 @@ public static class TestLoader
 
     public static void Load(string file)
     {
-        var sw = System.Diagnostics.Stopwatch.StartNew();
-        sw.Stop();
-        var t0 = sw.Elapsed.TotalMilliseconds;
-        sw.Restart();
         var source = Usings + File.ReadAllText(file);
         var tree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Latest));
-        sw.Stop();
-        var tParse = sw.Elapsed.TotalMilliseconds;
-        sw.Restart();
-        var refs = References();
-        sw.Stop();
-        var tRefs = sw.Elapsed.TotalMilliseconds;
-        sw.Restart();
         var compilation = CSharpCompilation.Create(
             "ducktape_" + Path.GetFileNameWithoutExtension(file),
             new[] { tree },
-            refs,
-            new CSharpCompilationOptions(OutputKind.ConsoleApplication));
+            _refs.Value,
+            new CSharpCompilationOptions(
+                OutputKind.ConsoleApplication,
+                optimizationLevel: OptimizationLevel.Release,
+                xmlReferenceResolver: null));
 
         using var ms = new MemoryStream();
         var emit = compilation.Emit(ms);
-        sw.Stop();
-        var tEmit = sw.Elapsed.TotalMilliseconds;
         if (!emit.Success)
         {
             var errors = string.Join("\n", emit.Diagnostics
@@ -53,7 +43,6 @@ public static class TestLoader
             throw new InvalidOperationException($"ducktape: failed to compile {file}\n{errors}");
         }
 
-        sw.Restart();
         ms.Position = 0;
         var asm = AssemblyLoadContext.Default.LoadFromStream(ms);
         var entry = asm.EntryPoint!;
@@ -61,18 +50,20 @@ public static class TestLoader
             ? Array.Empty<object?>()
             : new object?[] { Array.Empty<string>() };
         entry.Invoke(null, argv);
-        sw.Stop();
-        System.Console.Error.WriteLine($"[timing] {Path.GetFileName(file)} parse={tParse:F0}ms refs={tRefs:F0}ms emit={tEmit:F0}ms load+invoke={sw.Elapsed.TotalMilliseconds:F0}ms");
     }
 
-    static List<MetadataReference> References()
+    // Cached once — building MetadataReferences from TRUSTED_PLATFORM_ASSEMBLIES
+    // reads 200-300 DLLs from disk; rebuilding per-file makes the suite 5x+ slower.
+    static readonly Lazy<List<MetadataReference>> _refs = new(BuildReferences);
+
+    static List<MetadataReference> BuildReferences()
     {
         var tpa = AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") as string ?? "";
         var refs = tpa
             .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
             .Select(p => (MetadataReference)MetadataReference.CreateFromFile(p))
             .ToList();
-        refs.Add(MetadataReference.CreateFromFile(typeof(Tests).Assembly.Location));
+        refs.Add(MetadataReference.CreateFromFile(typeof(Test).Assembly.Location));
         return refs;
     }
 }

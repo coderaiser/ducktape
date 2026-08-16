@@ -1,6 +1,7 @@
 using DuckTape.Formatter;
 
 namespace DuckTape;
+
 public record RunnerState(
     IFormatter Formatter,
     Func<int> Count,
@@ -49,13 +50,13 @@ public class T
             _state.IncFailed();
             _state.Formatter.Emit("test:fail", new
             {
-                count     = _state.Count(),
-                message   = ts.Message,
+                count = _state.Count(),
+                message = ts.Message,
                 @operator = name,
-                result    = ts.Result,
-                expected  = ts.Expected,
-                output    = ts.Output,
-                at        = ts.At,
+                result = ts.Result,
+                expected = ts.Expected,
+                output = ts.Output,
+                at = ts.At,
                 error_stack = ts.Stack,
             });
         }

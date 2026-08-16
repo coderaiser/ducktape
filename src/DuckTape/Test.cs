@@ -1,25 +1,35 @@
 namespace DuckTape;
 
-public static class Tests
+public static class Test
 {
     static readonly List<TestDefinition> _tests = new();
 
-    public static void Test(string message, Func<T, Task> fn, bool skip = false, bool only = false) =>
-        Add(message, fn, skip, only);
+    /// <summary>
+    /// Returns a local test function. Usage: var test = CreateTest();
+    /// Mirrors supertape's createTest() API.
+    /// </summary>
+    public static Action<string, Action<T>> CreateTest() =>
+        (message, fn) => Add(message, t => { fn(t); return Task.CompletedTask; }, false, false);
 
-    public static void Test(string message, Action<T> fn, bool skip = false, bool only = false) =>
-        Add(message, t => { fn(t); return Task.CompletedTask; }, skip, only);
+    /// <summary>
+    /// Async variant. Usage: var test = CreateTestAsync();
+    /// </summary>
+    public static Action<string, Func<T, Task>> CreateTestAsync() =>
+        (message, fn) => Add(message, fn, false, false);
 
-    public static void Only(string message, Action<T> fn) => Add(message, t => { fn(t); return Task.CompletedTask; }, false, true);
+    public static void Only(string message, Action<T> fn) =>
+        Add(message, t => { fn(t); return Task.CompletedTask; }, false, true);
 
-    public static void Skip(string message, Action<T> fn) => Add(message, t => { fn(t); return Task.CompletedTask; }, true, false);
+    public static void Skip(string message, Action<T> fn) =>
+        Add(message, t => { fn(t); return Task.CompletedTask; }, true, false);
 
     static void Add(string message, Func<T, Task> fn, bool skip, bool only) =>
         _tests.Add(new TestDefinition(message, fn, skip, only, CallerAt()));
 
     internal static List<TestDefinition> All => _tests;
 
-    static string CallerAt([System.Runtime.CompilerServices.CallerFilePath] string file = "",
-                           [System.Runtime.CompilerServices.CallerLineNumber] int line = 0) =>
+    static string CallerAt(
+        [System.Runtime.CompilerServices.CallerFilePath] string file = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int line = 0) =>
         $"{file}:{line}";
 }

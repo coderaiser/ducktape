@@ -33,7 +33,7 @@ public class ShortFormatter : FormatterBase
         lines.Add($"# tests {count}");
         lines.Add($"# pass {passed}");
         if (skipped > 0) lines.Add($"# skip {skipped}");
-        if (failed > 0)  lines.Add($"# fail {failed}");
+        if (failed > 0) lines.Add($"# fail {failed}");
         lines.Add(failed == 0 ? "# ok" : "");
         return string.Join('\n', lines);
     }

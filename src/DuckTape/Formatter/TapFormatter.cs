@@ -30,7 +30,7 @@ public class TapFormatter : FormatterBase
     {
         var lines = new List<string> { "", $"1..{count}", $"# tests {count}", $"# pass {passed}" };
         if (skipped > 0) lines.Add($"# skip {skipped}");
-        if (failed > 0)  lines.Add($"# fail {failed}");
+        if (failed > 0) lines.Add($"# fail {failed}");
         lines.Add("");
         if (failed == 0) lines.Add("# ok");
         lines.Add("");

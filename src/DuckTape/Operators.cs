@@ -3,11 +3,11 @@ namespace DuckTape;
 public record TestState(
     bool IsOk,
     string Message,
-    object? Result   = null,
+    object? Result = null,
     object? Expected = null,
-    string Output    = "",
-    string Stack     = "",
-    string At        = ""
+    string Output = "",
+    string Stack = "",
+    string At = ""
 );
 
 public static class Operators

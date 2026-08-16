@@ -1,43 +1,40 @@
 using DuckTape;
-using static DuckTape.Tests;
+using static DuckTape.Test;
 
-Test("entry: action overload runs its body", t =>
+var test = CreateTest();
+
+test("entry: action overload runs its body", t =>
 {
     t.Ok(true);
     t.End();
 });
 
-Test("entry: func overload runs its body", async t =>
+test("entry: createTest returns independent fn", t =>
 {
-    await Task.CompletedTask;
-    t.Ok(true);
+    var test2 = CreateTest();
+    t.Ok(test2 is not null);
     t.End();
 });
 
-Test("entry: skip registers a skipped test", t =>
+test("entry: skip registers a skipped test", t =>
 {
     Skip("entry: skipped registration", t2 => { t2.Ok(true); t2.End(); });
     t.Ok(true);
     t.End();
 });
 
-Test("entry: only registers an only test", t =>
+test("entry: only registers an only test", t =>
 {
     Only("entry: only registration", t2 => { t2.Ok(true); t2.End(); });
     t.Ok(true);
     t.End();
 });
 
-Test("entry: named skip param registers", t =>
-{
-    Test("entry: named skipped registration", t2 => Task.CompletedTask, skip: true);
-    t.Ok(true);
-    t.End();
-});
+var asyncTest = CreateTestAsync();
 
-Test("entry: named only param registers", t =>
+asyncTest("entry async overload runs its body", async t =>
 {
-    Test("entry: named only registration", t2 => { t2.Ok(true); t2.End(); }, only: true);
+    await Task.CompletedTask;
     t.Ok(true);
     t.End();
 });

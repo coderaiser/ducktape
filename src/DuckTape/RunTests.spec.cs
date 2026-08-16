@@ -1,11 +1,13 @@
 using DuckTape;
 using DuckTape.Formatter;
-using static DuckTape.Tests;
+using static DuckTape.Test;
+
+var test = CreateTest();
 
 RunResult RunMini(List<TestDefinition> tests) =>
     Runner.RunTests(tests, new RecordingFormatter()).GetAwaiter().GetResult();
 
-Test("run_tests: runs tests serially", t =>
+test("run_tests: runs tests serially", t =>
 {
     var order = new List<string>();
     var tests = new List<TestDefinition>
@@ -18,7 +20,7 @@ Test("run_tests: runs tests serially", t =>
     t.End();
 });
 
-Test("run_tests: skipped tests do not run", t =>
+test("run_tests: skipped tests do not run", t =>
 {
     var ran = new List<int>();
     var tests = new List<TestDefinition>
@@ -30,7 +32,7 @@ Test("run_tests: skipped tests do not run", t =>
     t.End();
 });
 
-Test("run_tests: only tests skip others", t =>
+test("run_tests: only tests skip others", t =>
 {
     var ran = new List<string>();
     var tests = new List<TestDefinition>
@@ -43,7 +45,7 @@ Test("run_tests: only tests skip others", t =>
     t.End();
 });
 
-Test("run_tests: result holds counts", t =>
+test("run_tests: result holds counts", t =>
 {
     var tests = new List<TestDefinition>
     {
@@ -55,7 +57,7 @@ Test("run_tests: result holds counts", t =>
     t.End();
 });
 
-Test("run_tests: exception in test body fails the test", t =>
+test("run_tests: exception in test body fails the test", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
     var tests = new List<TestDefinition>
@@ -68,7 +70,7 @@ Test("run_tests: exception in test body fails the test", t =>
     t.End();
 });
 
-Test("run_tests: slow test times out", t =>
+test("run_tests: slow test times out", t =>
 {
     Environment.SetEnvironmentVariable("DUCKTAPE_TIMEOUT", "50");
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
@@ -83,7 +85,7 @@ Test("run_tests: slow test times out", t =>
     t.End();
 });
 
-Test("run_tests: zero assertions fail validation", t =>
+test("run_tests: zero assertions fail validation", t =>
 {
     var tests = new List<TestDefinition>
     {
@@ -94,7 +96,7 @@ Test("run_tests: zero assertions fail validation", t =>
     t.End();
 });
 
-Test("run_tests: extra assertions fail validation", t =>
+test("run_tests: extra assertions fail validation", t =>
 {
     var tests = new List<TestDefinition>
     {
@@ -105,7 +107,7 @@ Test("run_tests: extra assertions fail validation", t =>
     t.End();
 });
 
-Test("run_tests: start and end events are emitted", t =>
+test("run_tests: start and end events are emitted", t =>
 {
     var rec = new RecordingFormatter();
     var tests = new List<TestDefinition>
