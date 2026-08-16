@@ -8,30 +8,35 @@ test("formatter_resolver: resolves tap", t =>
 {
     t.Ok(FormatterResolver.Resolve("tap") is TapFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_resolver: resolves fail", t =>
 {
     t.Ok(FormatterResolver.Resolve("fail") is FailFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_resolver: resolves short", t =>
 {
     t.Ok(FormatterResolver.Resolve("short") is ShortFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_resolver: resolves json-lines", t =>
 {
     t.Ok(FormatterResolver.Resolve("json-lines") is JsonLinesFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_resolver: resolves progress-bar", t =>
 {
     t.Ok(FormatterResolver.Resolve("progress-bar") is ProgressBarFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_resolver: rejects unknown format", t =>
@@ -41,6 +46,7 @@ test("formatter_resolver: rejects unknown format", t =>
     catch (ArgumentException ex) { threw = ex.Message.Contains("nope"); }
     t.Ok(threw);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_resolver: honors the stream", t =>
@@ -49,6 +55,7 @@ test("formatter_resolver: honors the stream", t =>
     FormatterResolver.Resolve("tap", sw).Emit("start", new { total = 1 });
     t.Ok(sw.ToString().Contains("TAP version 13"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_base: bare formatter returns null for every hook", t =>
@@ -64,12 +71,14 @@ test("formatter_base: bare formatter returns null for every hook", t =>
     f.Emit("end", new { count = 1, passed = 1, failed = 0, skipped = 0 });
     t.Equal(sw.ToString(), "");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("formatter_base: default stream is console", t =>
 {
     t.Ok(new BareFormatter() is IFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 class BareFormatter : FormatterBase

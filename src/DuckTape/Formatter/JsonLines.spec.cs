@@ -11,6 +11,7 @@ test("json_lines: start emits one json object", t =>
     f.Emit("start", new { total = 2 });
     t.Ok(sw.ToString().Contains("{\"type\":\"start\",\"total\":2}"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("json_lines: test is silent", t =>
@@ -20,6 +21,7 @@ test("json_lines: test is silent", t =>
     f.Emit("test", new { test = "x" });
     t.Equal(sw.ToString(), "");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("json_lines: test_end emits progress json", t =>
@@ -30,6 +32,7 @@ test("json_lines: test_end emits progress json", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("\"type\":\"test:end\"") && out_.Contains("jl: sample"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("json_lines: success is silent", t =>
@@ -39,6 +42,7 @@ test("json_lines: success is silent", t =>
     f.Emit("test:success", new { count = 1, message = "m" });
     t.Equal(sw.ToString(), "");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("json_lines: fail emits failure json", t =>
@@ -49,6 +53,7 @@ test("json_lines: fail emits failure json", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("\"type\":\"fail\"") && out_.Contains("boom"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("json_lines: comment emits comment json", t =>
@@ -58,6 +63,7 @@ test("json_lines: comment emits comment json", t =>
     f.Emit("comment", new { message = "hi" });
     t.Ok(sw.ToString().Contains("\"type\":\"comment\""));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("json_lines: end emits summary json", t =>
@@ -67,4 +73,5 @@ test("json_lines: end emits summary json", t =>
     f.Emit("end", new { count = 1, passed = 1, failed = 0, skipped = 0 });
     t.Ok(sw.ToString().Contains("\"type\":\"end\""));
     t.End();
+    return Task.CompletedTask;
 });

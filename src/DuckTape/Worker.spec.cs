@@ -9,6 +9,7 @@ test("worker: runs an action", t =>
     Worker.Run(() => list.Add(1));
     t.Equal(list.Count, 1);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("worker: returns a value", t =>
@@ -16,6 +17,7 @@ test("worker: returns a value", t =>
     var value = Worker.Run(() => 42);
     t.Equal(value, 42);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("worker: disabled flag reflects env", t =>
@@ -25,6 +27,7 @@ test("worker: disabled flag reflects env", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", null);
     t.Ok(disabled);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("worker: disabled mode runs inline", t =>
@@ -35,6 +38,7 @@ test("worker: disabled mode runs inline", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", null);
     t.Ok(ran);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("worker: disabled mode returns value", t =>
@@ -44,6 +48,7 @@ test("worker: disabled mode returns value", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_NO_WORKER", null);
     t.Equal(value, "yes");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("worker: action runs on a worker thread by default", t =>
@@ -53,6 +58,7 @@ test("worker: action runs on a worker thread by default", t =>
     Worker.Run(() => { flag = true; });
     t.Ok(flag);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("worker: func runs on a worker thread and returns", t =>
@@ -61,4 +67,5 @@ test("worker: func runs on a worker thread and returns", t =>
     var value = Worker.Run(() => 7);
     t.Equal(value, 7);
     t.End();
+    return Task.CompletedTask;
 });

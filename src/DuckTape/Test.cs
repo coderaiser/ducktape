@@ -5,16 +5,11 @@ public static class Test
     static readonly List<TestDefinition> _tests = new();
 
     /// <summary>
-    /// Returns a local test function. Usage: var test = CreateTest();
-    /// Mirrors supertape's createTest() API.
+    /// Returns a local test function. Handles both sync and async callbacks.
+    /// Usage: var test = CreateTest();
+    /// Mirrors supertape's createTest() exactly — no separate async variant.
     /// </summary>
-    public static Action<string, Action<T>> CreateTest() =>
-        (message, fn) => Add(message, t => { fn(t); return Task.CompletedTask; }, false, false);
-
-    /// <summary>
-    /// Async variant. Usage: var test = CreateTestAsync();
-    /// </summary>
-    public static Action<string, Func<T, Task>> CreateTestAsync() =>
+    public static Action<string, Func<T, Task>> CreateTest() =>
         (message, fn) => Add(message, fn, false, false);
 
     public static void Only(string message, Action<T> fn) =>

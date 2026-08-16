@@ -17,6 +17,7 @@ test("cli: help prints usage and exits ok", t =>
     var code = CliRunner.Run(new[] { "-h" }, sw, err);
     t.Ok(code == ExitCodes.Ok && sw.ToString().Contains("Usage"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: --help prints usage too", t =>
@@ -26,6 +27,7 @@ test("cli: --help prints usage too", t =>
     var code = CliRunner.Run(new[] { "--help" }, sw, err);
     t.Ok(code == ExitCodes.Ok && sw.ToString().Contains("DUCKTAPE_TIMEOUT"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: version prints the version", t =>
@@ -35,6 +37,7 @@ test("cli: version prints the version", t =>
     var code = CliRunner.Run(new[] { "--version" }, sw, err);
     t.Ok(code == ExitCodes.Ok && sw.ToString().Contains("0.1.0"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: no matches is invalid option", t =>
@@ -44,6 +47,7 @@ test("cli: no matches is invalid option", t =>
     var code = CliRunner.Run(new[] { "nope*.cs" }, sw, err);
     t.Ok(code == ExitCodes.InvalidOption && err.ToString().Contains("no test files matched"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: invalid format is invalid option", t =>
@@ -53,6 +57,7 @@ test("cli: invalid format is invalid option", t =>
     var code = CliRunner.Run(new[] { "-f", "bogus" }, sw, err);
     t.Ok(code == ExitCodes.InvalidOption && err.ToString().Contains("unknown format"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: passing suite exits zero", t =>
@@ -69,6 +74,7 @@ test("cli: passing suite exits zero", t =>
     Directory.Delete(dir.FullName, true);
     t.Ok(code == ExitCodes.Ok && sw.ToString().Contains("TAP version 13"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: failing suite exits one", t =>
@@ -85,6 +91,7 @@ test("cli: failing suite exits one", t =>
     Directory.Delete(dir.FullName, true);
     t.Equal(code, ExitCodes.Fail);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: loader errors are surfaced as failures", t =>
@@ -101,6 +108,7 @@ test("cli: loader errors are surfaced as failures", t =>
     Directory.Delete(dir.FullName, true);
     t.Ok(code == ExitCodes.Fail && err.ToString().Contains("boom"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: skipped tests honour check flag", t =>
@@ -119,6 +127,7 @@ test("cli: skipped tests honour check flag", t =>
     Directory.Delete(dir.FullName, true);
     t.Equal(code, ExitCodes.Skipped);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: no_check_duplicates writes env before exit", t =>
@@ -130,6 +139,7 @@ test("cli: no_check_duplicates writes env before exit", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_DUPLICATES", null);
     t.Ok(code == ExitCodes.InvalidOption && env == "0");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: no_check_assertions_count writes env", t =>
@@ -141,6 +151,19 @@ test("cli: no_check_assertions_count writes env", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", null);
     t.Equal(env, "0");
     t.End();
+    return Task.CompletedTask;
+});
+
+test("cli: no_check_scopes writes env", t =>
+{
+    var sw = new StringWriter();
+    var err = new StringWriter();
+    CliRunner.Execute(new[] { "--no-check-scopes" }, sw, err, NoopDeps());
+    var env = Environment.GetEnvironmentVariable("DUCKTAPE_CHECK_SCOPES");
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_SCOPES", null);
+    t.Equal(env, "0");
+    t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: default deps resolve non bar formats to stdout", t =>
@@ -148,6 +171,7 @@ test("cli: default deps resolve non bar formats to stdout", t =>
     var resolved = CliRunner.Default.Resolve("tap", new StringWriter());
     t.Ok(resolved is TapFormatter);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("cli: plain run routes to console", t =>
@@ -155,4 +179,5 @@ test("cli: plain run routes to console", t =>
     var code = CliRunner.Run(new[] { "-h" });
     t.Equal(code, ExitCodes.Ok);
     t.End();
+    return Task.CompletedTask;
 });

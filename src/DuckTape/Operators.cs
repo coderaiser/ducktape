@@ -39,6 +39,14 @@ public static class Operators
         return new(isOk, message, result, expected, isOk ? "" : Diff.MakeDiff(expected, result));
     }
 
+    public static TestState NotDeepEqual<T>(T result, T expected, string message = "should not deep equal")
+    {
+        var ra = System.Text.Json.JsonSerializer.Serialize(result);
+        var rb = System.Text.Json.JsonSerializer.Serialize(expected);
+        var isOk = ra != rb;
+        return new(isOk, message, result, expected, isOk ? "" : Diff.MakeDiff(expected, result));
+    }
+
     public static TestState Match(string result, string pattern, string message = "should match")
     {
         var isOk = System.Text.RegularExpressions.Regex.IsMatch(result, pattern);

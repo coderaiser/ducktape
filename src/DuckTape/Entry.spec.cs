@@ -7,6 +7,14 @@ test("entry: action overload runs its body", t =>
 {
     t.Ok(true);
     t.End();
+    return Task.CompletedTask;
+});
+
+test("entry: async callback runs", async t =>
+{
+    await Task.CompletedTask;
+    t.Ok(true);
+    t.End();
 });
 
 test("entry: createTest returns independent fn", t =>
@@ -14,6 +22,7 @@ test("entry: createTest returns independent fn", t =>
     var test2 = CreateTest();
     t.Ok(test2 is not null);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("entry: skip registers a skipped test", t =>
@@ -21,6 +30,7 @@ test("entry: skip registers a skipped test", t =>
     Skip("entry: skipped registration", t2 => { t2.Ok(true); t2.End(); });
     t.Ok(true);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("entry: only registers an only test", t =>
@@ -28,13 +38,5 @@ test("entry: only registers an only test", t =>
     Only("entry: only registration", t2 => { t2.Ok(true); t2.End(); });
     t.Ok(true);
     t.End();
-});
-
-var asyncTest = CreateTestAsync();
-
-asyncTest("entry async overload runs its body", async t =>
-{
-    await Task.CompletedTask;
-    t.Ok(true);
-    t.End();
+    return Task.CompletedTask;
 });

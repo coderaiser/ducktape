@@ -12,6 +12,7 @@ test("fail: test names are silent", t =>
     f.Emit("test", new { test = "fail: hidden" });
     t.Equal(sw.ToString(), "TAP version 13\n");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("fail: successes are silent", t =>
@@ -22,6 +23,7 @@ test("fail: successes are silent", t =>
     f.Emit("test:success", new { count = 1, message = "fail: passes" });
     t.Equal(sw.ToString(), "TAP version 13\n");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("fail: failures are shown", t =>
@@ -31,6 +33,7 @@ test("fail: failures are shown", t =>
     f.Emit("test:fail", new { at = "a.cs:1", count = 1, message = "m", @operator = "equal", result = 1, expected = 2, output = "", error_stack = "st" });
     t.Ok(sw.ToString().Contains("not ok 1 m"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("fail: comments are inherited from tap", t =>
@@ -40,6 +43,7 @@ test("fail: comments are inherited from tap", t =>
     f.Emit("comment", new { message = "hi" });
     t.Ok(sw.ToString().Contains("# hi\n"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("fail: summary is inherited from tap", t =>
@@ -49,6 +53,7 @@ test("fail: summary is inherited from tap", t =>
     f.Emit("end", new { count = 1, passed = 1, failed = 0, skipped = 0 });
     t.Ok(sw.ToString().Contains("1..1"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("fail: test_end emits nothing extra", t =>
@@ -59,4 +64,5 @@ test("fail: test_end emits nothing extra", t =>
     f.Emit("test:end", new { count = 1, total = 1, failed = 0, test = "x" });
     t.Equal(sw.ToString(), "TAP version 13\n");
     t.End();
+    return Task.CompletedTask;
 });

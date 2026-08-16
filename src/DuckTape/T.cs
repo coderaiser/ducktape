@@ -87,6 +87,9 @@ public class T
     public void DeepEqual<T1>(T1 result, T1 expected, string message = "should deep equal") =>
         Run("deep_equal", Operators.DeepEqual(result, expected, message));
 
+    public void NotDeepEqual<T1>(T1 result, T1 expected, string message = "should not deep equal") =>
+        Run("not_deep_equal", Operators.NotDeepEqual(result, expected, message));
+
     public void Match(string result, string pattern, string message = "should match") =>
         Run("match", Operators.Match(result, pattern, message));
 

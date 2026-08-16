@@ -19,6 +19,7 @@ test("progress_bar: forced bar starts at zero percent", t =>
     f.Emit("start", new { total = 2 });
     t.Ok(sw.ToString().Contains("\r[") && sw.ToString().Contains("0%"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: success advances the bar", t =>
@@ -29,6 +30,7 @@ test("progress_bar: success advances the bar", t =>
     f.Emit("test:success", new { count = 1, message = "pb: one" });
     t.Ok(sw.ToString().Contains("50%"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: fail shows stack when enabled", t =>
@@ -41,6 +43,7 @@ test("progress_bar: fail shows stack when enabled", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_STACK", null);
     t.Ok(sw.ToString().Contains("pb: bad") && sw.ToString().Contains("a.cs:1"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: fail hides stack when disabled", t =>
@@ -53,6 +56,7 @@ test("progress_bar: fail hides stack when disabled", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_STACK", null);
     t.Ok(!sw.ToString().Contains("hidden.cs:1"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: end summarizes the run", t =>
@@ -65,6 +69,7 @@ test("progress_bar: end summarizes the run", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("# pass 1") && out_.Contains("# fail 0"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: zero total renders safely", t =>
@@ -74,6 +79,7 @@ test("progress_bar: zero total renders safely", t =>
     f.Emit("start", new { total = 0 });
     t.Ok(sw.ToString().Contains("0%"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: test and comment are silent in bar mode", t =>
@@ -86,6 +92,7 @@ test("progress_bar: test and comment are silent in bar mode", t =>
     f.Emit("comment", new { message = "pb: hidden" });
     t.Equal(sw.ToString().Length, before);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: ci forces tap fallback", t =>
@@ -98,6 +105,7 @@ test("progress_bar: ci forces tap fallback", t =>
     Environment.SetEnvironmentVariable("CI", null);
     t.Ok(sw.ToString().Contains("TAP version 13"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: force off falls back to tap", t =>
@@ -111,6 +119,7 @@ test("progress_bar: force off falls back to tap", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
     t.Ok(sw.ToString().Contains("ok 1 pb: tap"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: below minimum falls back to tap", t =>
@@ -124,6 +133,7 @@ test("progress_bar: below minimum falls back to tap", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_MIN", null);
     t.Ok(sw.ToString().Contains("TAP version 13"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: bar allowed when total meets minimum", t =>
@@ -137,6 +147,7 @@ test("progress_bar: bar allowed when total meets minimum", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR_MIN", null);
     t.Ok(sw.ToString().Contains("[") && sw.ToString().Contains("0%") && !sw.ToString().Contains("TAP"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("progress_bar: test_end is silent in bar mode", t =>
@@ -148,4 +159,5 @@ test("progress_bar: test_end is silent in bar mode", t =>
     f.Emit("test:end", new { count = 1, total = 1, failed = 0, test = "pb: end" });
     t.Equal(sw.ToString().Length, before);
     t.End();
+    return Task.CompletedTask;
 });

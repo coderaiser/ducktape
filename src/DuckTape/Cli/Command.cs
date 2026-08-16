@@ -37,6 +37,8 @@ public static class CliRunner
             Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_DUPLICATES", "0");
         if (args.NoCheckAssertionsCount)
             Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
+        if (args.NoCheckScopes)
+            Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_SCOPES", "0");
 
         var files = args.Patterns
             .SelectMany(Glob.Expand)

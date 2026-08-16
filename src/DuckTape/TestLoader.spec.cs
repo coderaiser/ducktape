@@ -15,6 +15,7 @@ test("test_loader: compiles and runs a spec file", t =>
     Directory.Delete(dir.FullName, true);
     t.Equal(ran, "ran");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("test_loader: runs parameterless entry points", t =>
@@ -29,6 +30,7 @@ test("test_loader: runs parameterless entry points", t =>
     Directory.Delete(dir.FullName, true);
     t.Equal(ran, "p");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("test_loader: compile errors are reported", t =>
@@ -42,6 +44,7 @@ test("test_loader: compile errors are reported", t =>
     Directory.Delete(dir.FullName, true);
     t.Ok(threw);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("test_loader: missing entry point is reported", t =>
@@ -55,4 +58,5 @@ test("test_loader: missing entry point is reported", t =>
     Directory.Delete(dir.FullName, true);
     t.Ok(threw);
     t.End();
+    return Task.CompletedTask;
 });

@@ -11,6 +11,7 @@ test("tap: start prints the tap header", t =>
     f.Emit("start", new { total = 1 });
     t.Ok(sw.ToString().Contains("TAP version 13\n"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: test prints a comment header", t =>
@@ -20,6 +21,7 @@ test("tap: test prints a comment header", t =>
     f.Emit("test", new { test = "tap: sample" });
     t.Ok(sw.ToString().Contains("# tap: sample\n"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: success prints an ok line", t =>
@@ -30,6 +32,7 @@ test("tap: success prints an ok line", t =>
     f.Emit("test:success", new { count = 1, message = "tap: passes" });
     t.Ok(sw.ToString().Contains("ok 1 tap: passes\n"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: comment prints a comment line", t =>
@@ -39,6 +42,7 @@ test("tap: comment prints a comment line", t =>
     f.Emit("comment", new { message = "hi" });
     t.Ok(sw.ToString().Contains("# hi\n"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: fail without output prints expected and result and stack", t =>
@@ -49,6 +53,7 @@ test("tap: fail without output prints expected and result and stack", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("expected: |-") && out_.Contains("result: |-") && out_.Contains("stack: |-"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: fail with output prints the output", t =>
@@ -59,6 +64,7 @@ test("tap: fail with output prints the output", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("obj: 7") && !out_.Contains("expected: |-"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: fail includes the location", t =>
@@ -68,6 +74,7 @@ test("tap: fail includes the location", t =>
     f.Emit("test:fail", new { at = "loc.cs:9", count = 1, message = "m", @operator = "op", result = 1, expected = 2, output = "", error_stack = "" });
     t.Ok(sw.ToString().Contains("loc.cs:9"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: end prints the plan and ok", t =>
@@ -78,6 +85,7 @@ test("tap: end prints the plan and ok", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("1..1") && out_.Contains("# tests 1") && out_.Contains("# ok"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: end includes skip line", t =>
@@ -87,6 +95,7 @@ test("tap: end includes skip line", t =>
     f.Emit("end", new { count = 1, passed = 0, failed = 0, skipped = 1 });
     t.Ok(sw.ToString().Contains("# skip 1"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: end includes fail line without ok", t =>
@@ -96,6 +105,7 @@ test("tap: end includes fail line without ok", t =>
     f.Emit("end", new { count = 1, passed = 0, failed = 1, skipped = 0 });
     t.Ok(sw.ToString().Contains("# fail 1") && !sw.ToString().Contains("# ok"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("tap: test_end produces no output", t =>
@@ -105,4 +115,5 @@ test("tap: test_end produces no output", t =>
     f.Emit("test:end", new { count = 1, total = 1, failed = 0, test = "x" });
     t.Equal(sw.ToString(), "");
     t.End();
+    return Task.CompletedTask;
 });

@@ -18,6 +18,7 @@ test("run_tests: runs tests serially", t =>
     RunMini(tests);
     t.DeepEqual(order, new List<string> { "a", "b" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: skipped tests do not run", t =>
@@ -30,6 +31,7 @@ test("run_tests: skipped tests do not run", t =>
     RunMini(tests);
     t.Equal(ran.Count, 0);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: only tests skip others", t =>
@@ -43,6 +45,7 @@ test("run_tests: only tests skip others", t =>
     RunMini(tests);
     t.DeepEqual(ran, new List<string> { "only" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: result holds counts", t =>
@@ -55,6 +58,7 @@ test("run_tests: result holds counts", t =>
     var r = RunMini(tests);
     t.DeepEqual(new[] { r.Count, r.Passed, r.Failed, r.Skipped }, new[] { 2, 2, 0, 0 });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: exception in test body fails the test", t =>
@@ -68,6 +72,7 @@ test("run_tests: exception in test body fails the test", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", null);
     t.Equal(r.Failed, 1);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: slow test times out", t =>
@@ -83,6 +88,7 @@ test("run_tests: slow test times out", t =>
     Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", null);
     t.Equal(r.Failed, 1);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: zero assertions fail validation", t =>
@@ -94,6 +100,7 @@ test("run_tests: zero assertions fail validation", t =>
     var r = RunMini(tests);
     t.Equal(r.Failed, 1);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: extra assertions fail validation", t =>
@@ -105,6 +112,7 @@ test("run_tests: extra assertions fail validation", t =>
     var r = RunMini(tests);
     t.Equal(r.Failed, 1);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("run_tests: start and end events are emitted", t =>
@@ -117,6 +125,7 @@ test("run_tests: start and end events are emitted", t =>
     Runner.RunTests(tests, rec).GetAwaiter().GetResult();
     t.Ok(rec.Calls.Contains("start") && rec.Calls.Contains("end"));
     t.End();
+    return Task.CompletedTask;
 });
 
 class RecordingFormatter : IFormatter

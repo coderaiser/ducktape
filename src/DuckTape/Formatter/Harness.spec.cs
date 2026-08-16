@@ -11,6 +11,7 @@ test("harness: start routes to Start hook", t =>
     h.Write("start", new { total = 3 });
     t.DeepEqual(rec.Calls, new List<string> { "start:3" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: test routes to Test hook", t =>
@@ -20,6 +21,7 @@ test("harness: test routes to Test hook", t =>
     h.Write("test", new { test = "name" });
     t.DeepEqual(rec.Calls, new List<string> { "test:name" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: test_end routes with all args", t =>
@@ -29,6 +31,7 @@ test("harness: test_end routes with all args", t =>
     h.Write("test:end", new { count = 1, total = 2, failed = 0, test = "name" });
     t.DeepEqual(rec.Calls, new List<string> { "test:end:1:2:0" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: test_success routes with message", t =>
@@ -38,6 +41,7 @@ test("harness: test_success routes with message", t =>
     h.Write("test:success", new { count = 1, message = "passes" });
     t.DeepEqual(rec.Calls, new List<string> { "success:1:passes" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: test_fail routes with all fields", t =>
@@ -47,6 +51,7 @@ test("harness: test_fail routes with all fields", t =>
     h.Write("test:fail", new { at = "a.cs", count = 1, message = "m", @operator = "equal", result = 1, expected = 2, output = "", error_stack = "st" });
     t.DeepEqual(rec.Calls, new List<string> { "fail:a.cs:1" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: comment routes to Comment hook", t =>
@@ -56,6 +61,7 @@ test("harness: comment routes to Comment hook", t =>
     h.Write("comment", new { message = "hi" });
     t.DeepEqual(rec.Calls, new List<string> { "comment:hi" });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: end routes to End hook then locks", t =>
@@ -68,6 +74,7 @@ test("harness: end routes to End hook then locks", t =>
     catch (InvalidOperationException) { threw = true; }
     t.Ok(threw);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: unknown events are ignored", t =>
@@ -77,6 +84,7 @@ test("harness: unknown events are ignored", t =>
     h.Write("bogus", new { x = 1 });
     t.Equal(rec.Calls.Count, 0);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: null results are not written", t =>
@@ -86,6 +94,7 @@ test("harness: null results are not written", t =>
     h.Write("start", new { total = 1 });
     t.Equal(sw.ToString(), "");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("harness: pipe redirects the stream", t =>
@@ -99,6 +108,7 @@ test("harness: pipe redirects the stream", t =>
     h.Write("test", new { test = "n" });
     t.Ok(sw2.ToString().Contains("Y") && !sw1.ToString().Contains("Y"));
     t.End();
+    return Task.CompletedTask;
 });
 
 class RecordingFormatter : IFormatter

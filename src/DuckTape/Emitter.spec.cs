@@ -11,6 +11,7 @@ test("emitter: On/Emit basic", t =>
     e.Emit("foo");
     t.Equal(calls.Count, 1);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("emitter: Emit forwards data payload", t =>
@@ -21,6 +22,7 @@ test("emitter: Emit forwards data payload", t =>
     e.Emit("d", "payload");
     t.Equal(received, "payload");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("emitter: Off removes listener", t =>
@@ -33,6 +35,7 @@ test("emitter: Off removes listener", t =>
     e.Emit("x");
     t.Equal(calls.Count, 0);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("emitter: multiple listeners on same event", t =>
@@ -44,6 +47,7 @@ test("emitter: multiple listeners on same event", t =>
     e.Emit("x");
     t.DeepEqual(calls, new List<int> { 1, 2 });
     t.End();
+    return Task.CompletedTask;
 });
 
 test("emitter: events without listeners do nothing", t =>
@@ -52,6 +56,7 @@ test("emitter: events without listeners do nothing", t =>
     e.Emit("nothing");
     t.Ok(true);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("emitter: Off for unknown event is a noop", t =>
@@ -60,6 +65,7 @@ test("emitter: Off for unknown event is a noop", t =>
     e.Off("nope", _ => { });
     t.Ok(true);
     t.End();
+    return Task.CompletedTask;
 });
 
 test("emitter: listeners are distinct per event", t =>
@@ -70,4 +76,5 @@ test("emitter: listeners are distinct per event", t =>
     e.Emit("b");
     t.Equal(a.Count, 0);
     t.End();
+    return Task.CompletedTask;
 });

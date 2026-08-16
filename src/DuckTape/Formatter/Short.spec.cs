@@ -11,6 +11,7 @@ test("short: start is silent", t =>
     f.Emit("start", new { total = 1 });
     t.Equal(sw.ToString(), "");
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: test prints a chevron line", t =>
@@ -20,6 +21,7 @@ test("short: test prints a chevron line", t =>
     f.Emit("test", new { test = "short: sample" });
     t.Ok(sw.ToString().Contains(">short: sample"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: success prints an ok summary", t =>
@@ -29,6 +31,7 @@ test("short: success prints an ok summary", t =>
     f.Emit("test:success", new { count = 1, message = "short: passes" });
     t.Ok(sw.ToString().Contains("OK 1 short: passes"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: comment prints a comment line", t =>
@@ -38,6 +41,7 @@ test("short: comment prints a comment line", t =>
     f.Emit("comment", new { message = "hi" });
     t.Ok(sw.ToString().Contains("# hi"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: fail prints a detailed block", t =>
@@ -48,6 +52,7 @@ test("short: fail prints a detailed block", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("NOT OK 1 m") && out_.Contains("expected: 2") && out_.Contains("result:   1"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: fail includes location and stack", t =>
@@ -58,6 +63,7 @@ test("short: fail includes location and stack", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("at: loc.cs:9") && out_.Contains("stack: trace"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: fail prints output when present", t =>
@@ -67,6 +73,7 @@ test("short: fail prints output when present", t =>
     f.Emit("test:fail", new { at = "", count = 1, message = "m", @operator = "op", result = 1, expected = 2, output = "      obj: 7", error_stack = "" });
     t.Ok(sw.ToString().Contains("obj: 7"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: end prints a passing summary", t =>
@@ -77,6 +84,7 @@ test("short: end prints a passing summary", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("# tests 2") && out_.Contains("# pass 2") && out_.Contains("# ok"));
     t.End();
+    return Task.CompletedTask;
 });
 
 test("short: end prints fail and skip lines", t =>
@@ -87,4 +95,5 @@ test("short: end prints fail and skip lines", t =>
     var out_ = sw.ToString();
     t.Ok(out_.Contains("# fail 1") && out_.Contains("# skip 1"));
     t.End();
+    return Task.CompletedTask;
 });
