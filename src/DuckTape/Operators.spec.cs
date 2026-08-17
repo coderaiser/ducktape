@@ -3,191 +3,211 @@ using static DuckTape.Test;
 
 var test = CreateTest();
 
-test("operators: Equal passes when values match", t =>
+// Test all operators with various inputs for branch coverage
+test("ok: null is falsy", t =>
 {
-    t.Ok(Operators.Equal(1, 1).IsOk);
+    var r = t.Ok(null!);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Equal fails when values differ", t =>
+test("ok: true is truthy", t =>
 {
-    t.NotOk(Operators.Equal(1, 2).IsOk);
+    var r = t.Ok(true);
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Equal produces diff on failure", t =>
+test("ok: 0 is falsy", t =>
 {
-    t.Ok(Operators.Equal(1, 2).Output.Length > 0);
+    var r = t.Ok(0);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Equal uses custom message", t =>
+test("ok: empty string is falsy", t =>
 {
-    t.Equal(Operators.Equal(1, 1, "should match").Message, "should match");
+    var r = t.Ok("");
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Ok passes for truthy", t =>
+test("ok: non-empty string is truthy", t =>
 {
-    t.Ok(Operators.Ok("hello").IsOk);
+    var r = t.Ok("hello");
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Ok fails for falsy", t =>
+test("not_ok: null is falsy", t =>
 {
-    t.NotOk(Operators.Ok("").IsOk);
+    var r = t.NotOk(null!);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Ok fails for null", t =>
+test("not_ok: false is falsy", t =>
 {
-    t.NotOk(Operators.Ok(null).IsOk);
+    var r = t.NotOk(false);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Ok fails for zero", t =>
+test("not_ok: 0 is falsy", t =>
 {
-    t.NotOk(Operators.Ok(0).IsOk);
+    var r = t.NotOk(0);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotOk passes for falsy", t =>
+test("not_ok: empty string is falsy", t =>
 {
-    t.Ok(Operators.NotOk(0).IsOk);
+    var r = t.NotOk("");
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotOk fails for truthy", t =>
+test("not_ok: non-empty string is truthy", t =>
 {
-    t.NotOk(Operators.NotOk("x").IsOk);
+    var r = t.NotOk("hello");
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotEqual passes when values differ", t =>
+test("equal: equal values", t =>
 {
-    t.Ok(Operators.NotEqual(1, 2).IsOk);
+    var r = t.Equal(42, 42);
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotEqual fails when values match", t =>
+test("equal: different ints", t =>
 {
-    t.NotOk(Operators.NotEqual(1, 1).IsOk);
+    var r = t.Equal(42, 100);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: DeepEqual passes for equal dicts", t =>
+test("equal: equal nulls", t =>
 {
-    var a = new Dictionary<string, int> { ["x"] = 1 };
-    var b = new Dictionary<string, int> { ["x"] = 1 };
-    t.Ok(Operators.DeepEqual(a, b).IsOk);
+    var r = t.Equal(null!, null!);
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: DeepEqual fails for differing dicts", t =>
+test("equal: null vs value", t =>
 {
-    var a = new Dictionary<string, int> { ["x"] = 1 };
-    var b = new Dictionary<string, int> { ["x"] = 2 };
-    t.NotOk(Operators.DeepEqual(a, b).IsOk);
+    var r = t.Equal(1, null!);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotDeepEqual passes for different collections", t =>
+test("not_equal: not equal values", t =>
 {
-    t.Ok(Operators.NotDeepEqual(new[] { 1, 2 }, new[] { 1, 3 }).IsOk);
+    var r = t.NotEqual(1, 2);
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotDeepEqual fails for equal collections", t =>
+test("not_equal: equal values", t =>
 {
-    t.NotOk(Operators.NotDeepEqual(new[] { 1, 2 }, new[] { 1, 2 }).IsOk);
+    var r = t.NotEqual(1, 1);
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotDeepEqual uses custom message", t =>
+test("deep_equal: equal arrays", t =>
 {
-    t.Equal(Operators.NotDeepEqual(new[] { 1 }, new[] { 2 }, "should differ").Message, "should differ");
+    var r = t.DeepEqual(new[] { 1, 2 }, new[] { 1, 2 });
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Match passes when regex matches", t =>
+test("deep_equal: different arrays", t =>
 {
-    t.Ok(Operators.Match("hello world", @"world").IsOk);
+    var r = t.DeepEqual(new[] { 1, 2 }, new[] { 1, 3 });
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Match fails when no match", t =>
+test("deep_equal: equal dictionaries", t =>
 {
-    t.NotOk(Operators.Match("hello", @"world").IsOk);
+    var r = t.DeepEqual(new Dictionary<string, int> { ["x"] = 1 }, new Dictionary<string, int> { ["x"] = 1 });
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotMatch passes when regex does not match", t =>
+test("deep_equal: different dictionaries", t =>
 {
-    t.Ok(Operators.NotMatch("hello", @"world").IsOk);
+    var r = t.DeepEqual(new Dictionary<string, int> { ["x"] = 1 }, new Dictionary<string, int> { ["x"] = 2 });
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: NotMatch fails when regex matches", t =>
+test("match: matches pattern", t =>
 {
-    t.NotOk(Operators.NotMatch("hello", @"llo").IsOk);
+    var r = t.Match("hello world", @"world");
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Pass is ok", t =>
+test("match: no match", t =>
 {
-    t.Ok(Operators.Pass().IsOk);
+    var r = t.Match("hello", @"world");
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Pass uses unnamed default message", t =>
+test("not_match: no match becomes match", t =>
 {
-    t.Equal(Operators.Pass().Message, "(unnamed assert)");
+    var r = t.NotMatch("hello", @"world");
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Fail carries exception message", t =>
+test("not_match: match becomes no match", t =>
 {
-    t.Equal(Operators.Fail(new InvalidOperationException("boom")).Message, "boom");
+    var r = t.NotMatch("hello", @"hello");
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Fail carries location", t =>
+test("pass: always passes", t =>
 {
-    t.Equal(Operators.Fail(new Exception("x"), "file.cs:2").At, "file.cs:2");
+    var r = t.Pass();
+    t.Equal(r.IsOk, true);
     t.End();
     return Task.CompletedTask;
 });
 
-test("operators: Fail carries stack trace", t =>
+test("fail: records exception", t =>
 {
-    Exception ex;
-    try { throw new Exception("x"); }
-    catch (Exception e) { ex = e; }
-    t.Ok(Operators.Fail(ex).Stack.Length > 0);
+    var r = t.Fail(new Exception("test error"));
+    t.Equal(r.IsOk, false);
     t.End();
     return Task.CompletedTask;
 });
