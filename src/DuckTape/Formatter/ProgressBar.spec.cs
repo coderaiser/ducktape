@@ -161,3 +161,59 @@ test("progress_bar: test_end is silent in bar mode", t =>
     t.End();
     return Task.CompletedTask;
 });
+
+test("progress_bar: test in tap fallback prints TAP comment", t =>
+{
+    Environment.SetEnvironmentVariable("CI", "1");
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
+    var sw = new StringWriter();
+    var f = new ProgressBarFormatter(sw);
+    f.Emit("start", new { total = 1 });
+    f.Emit("test", new { test = "pb: fallback test" });
+    Environment.SetEnvironmentVariable("CI", null);
+    t.Ok(sw.ToString().Contains("# pb: fallback test"));
+    t.End();
+    return Task.CompletedTask;
+});
+
+test("progress_bar: comment in tap fallback prints TAP comment", t =>
+{
+    Environment.SetEnvironmentVariable("CI", "1");
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
+    var sw = new StringWriter();
+    var f = new ProgressBarFormatter(sw);
+    f.Emit("start", new { total = 1 });
+    f.Emit("comment", new { message = "pb: fallback comment" });
+    Environment.SetEnvironmentVariable("CI", null);
+    t.Ok(sw.ToString().Contains("# pb: fallback comment"));
+    t.End();
+    return Task.CompletedTask;
+});
+
+test("progress_bar: fail in tap fallback prints TAP failure", t =>
+{
+    Environment.SetEnvironmentVariable("CI", "1");
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
+    var sw = new StringWriter();
+    var f = new ProgressBarFormatter(sw);
+    f.Emit("start", new { total = 1 });
+    f.Emit("test:fail", new { at = "fb.cs:1", count = 1, message = "fb: bad", @operator = "op", result = 1, expected = 2, output = "", error_stack = "st" });
+    Environment.SetEnvironmentVariable("CI", null);
+    t.Ok(sw.ToString().Contains("not ok 1 fb: bad"));
+    t.End();
+    return Task.CompletedTask;
+});
+
+test("progress_bar: end in tap fallback prints TAP summary", t =>
+{
+    Environment.SetEnvironmentVariable("CI", "1");
+    Environment.SetEnvironmentVariable("DUCKTAPE_PROGRESS_BAR", null);
+    var sw = new StringWriter();
+    var f = new ProgressBarFormatter(sw);
+    f.Emit("start", new { total = 1 });
+    f.Emit("end", new { count = 1, passed = 1, failed = 0, skipped = 0 });
+    Environment.SetEnvironmentVariable("CI", null);
+    t.Ok(sw.ToString().Contains("# tests 1") && sw.ToString().Contains("# ok"));
+    t.End();
+    return Task.CompletedTask;
+});

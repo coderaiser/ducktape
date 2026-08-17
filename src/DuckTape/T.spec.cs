@@ -149,6 +149,16 @@ test("t: asserting after end fails once", t =>
     return Task.CompletedTask;
 });
 
+test("t: triple end only fails once", t =>
+{
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", "0");
+    var r = RunMini(Mini(t2 => { t2.Ok(true); t2.End(); t2.End(); t2.End(); }));
+    Environment.SetEnvironmentVariable("DUCKTAPE_CHECK_ASSERTIONS_COUNT", null);
+    t.Equal(r.Failed, 1);
+    t.End();
+    return Task.CompletedTask;
+});
+
 class RecordingFormatter : IFormatter
 {
     public readonly List<string> Calls = new();

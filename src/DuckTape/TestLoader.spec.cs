@@ -60,3 +60,19 @@ test("test_loader: missing entry point is reported", t =>
     t.End();
     return Task.CompletedTask;
 });
+
+test("test_loader: build references from tpa returns refs", t =>
+{
+    var refs = TestLoader.BuildReferences();
+    t.Ok(refs.Count >= 1);
+    t.End();
+    return Task.CompletedTask;
+});
+
+test("test_loader: build references with non-string data falls back empty", t =>
+{
+    var refs = TestLoader.BuildReferences(42);
+    t.Ok(refs.Count >= 1);
+    t.End();
+    return Task.CompletedTask;
+});

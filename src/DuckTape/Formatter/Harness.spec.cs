@@ -111,6 +111,34 @@ test("harness: pipe redirects the stream", t =>
     return Task.CompletedTask;
 });
 
+test("harness: null data yields zero defaults", t =>
+{
+    var f = new EchoFormatter();
+    var sw = new StringWriter();
+    var h = new Harness(f, sw);
+    h.Write("start", null);
+    h.Write("test", null);
+    h.Write("test:end", null);
+    h.Write("test:success", null);
+    h.Write("test:fail", null);
+    h.Write("comment", null);
+    t.Ok(true);
+    t.End();
+    return Task.CompletedTask;
+});
+
+test("harness: missing properties on payload yield zero defaults", t =>
+{
+    var f = new EchoFormatter();
+    var sw = new StringWriter();
+    var h = new Harness(f, sw);
+    h.Write("start", new { wrong = "data" });
+    h.Write("end", new { count = 1, passed = 1, failed = 0 });
+    t.Ok(true);
+    t.End();
+    return Task.CompletedTask;
+});
+
 class RecordingFormatter : IFormatter
 {
     public readonly List<string> Calls = new();

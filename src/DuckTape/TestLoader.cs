@@ -54,11 +54,12 @@ public static class TestLoader
 
     // Cached once — building MetadataReferences from TRUSTED_PLATFORM_ASSEMBLIES
     // reads 200-300 DLLs from disk; rebuilding per-file makes the suite 5x+ slower.
-    static readonly Lazy<List<MetadataReference>> _refs = new(BuildReferences);
+    static readonly Lazy<List<MetadataReference>> _refs = new(() => BuildReferences());
 
-    static List<MetadataReference> BuildReferences()
+    public static List<MetadataReference> BuildReferences(object? tpaData = null)
     {
-        var tpa = AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") as string ?? "";
+        var data = tpaData ?? AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES");
+        var tpa = data as string ?? "";
         var refs = tpa
             .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries)
             .Select(p => (MetadataReference)MetadataReference.CreateFromFile(p))

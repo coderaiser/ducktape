@@ -16,6 +16,44 @@ string Root()
 }
 
 // Original tests
+test("glob: pattern with trailing slash causes null rel", t =>
+{
+    var r = Root();
+    var cwd = Environment.CurrentDirectory;
+    Environment.CurrentDirectory = r;
+    try
+    {
+        var files = Glob.Expand("dir1/");
+        t.Equal(files.Count, 0);
+    }
+    finally
+    {
+        Environment.CurrentDirectory = cwd;
+        Directory.Delete(r, true);
+    }
+    t.End();
+    return Task.CompletedTask;
+});
+
+test("glob: pattern without directory uses current dir", t =>
+{
+    var r = Root();
+    var cwd = Environment.CurrentDirectory;
+    Environment.CurrentDirectory = r;
+    try
+    {
+        var files = Glob.Expand("**");
+        t.Equal(files.Count, 4);
+    }
+    finally
+    {
+        Environment.CurrentDirectory = cwd;
+        Directory.Delete(r, true);
+    }
+    t.End();
+    return Task.CompletedTask;
+});
+
 test("glob: single star matches top level only", t =>
 {
     var r = Root();
@@ -123,19 +161,12 @@ test("glob: empty pattern returns nothing", t =>
     return Task.CompletedTask;
 });
 
-test("glob: asterisk only matches files under root", t =>
+test("glob: asterisk only matches top level files", t =>
 {
     var r = Root();
     var files = Glob.Expand(Path.Combine(r, "*"));
     Directory.Delete(r, true);
-    t.DeepEqual(files.OrderBy(f => f).ToList(),
-        new List<string>
-        {
-            Path.Combine(r, "a.spec.cs"),
-            Path.Combine(r, "dir1", "b.spec.cs"),
-            Path.Combine(r, "dir1", "c.txt"),
-            Path.Combine(r, "dir2", "sub", "d.spec.cs"),
-        });
+    t.DeepEqual(files, new List<string> { Path.Combine(r, "a.spec.cs") });
     t.End();
     return Task.CompletedTask;
 });
