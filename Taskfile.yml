@@ -46,7 +46,7 @@ tasks:
       CI: "1"
 
   coverage:
-    desc: Measure line coverage with coverlet; fail below 100%
+    desc: Measure line and branch coverage with coverlet; fail below 100%
     cmds:
       - dotnet build {{.PROJECT}}
       - coverlet {{.PROJECT}}/bin/Debug/net10.0/ducktape.dll
@@ -57,6 +57,8 @@ tasks:
           --include-test-assembly
           --threshold 100
           --threshold-type line
+          --threshold 100
+          --threshold-type branch
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
       CI: "1"
