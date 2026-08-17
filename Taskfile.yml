@@ -3,8 +3,26 @@ version: '3'
 vars:
   PROJECT: src/DuckTape
   SPECS: "'src/**/*.spec.cs'"
+  BINARY_BASE: https://github.com/coderaiser/binaries/releases/download/dotnet
+  NUGET_LOCAL: ./nuget-local
+  TOOLS_DIR: ./tools
 
 tasks:
+  bootstrap:
+    desc: Download SDK and NuGet packages from coderaiser/binaries
+    cmds:
+      - mkdir -p {{.TOOLS_DIR}}/dotnet {{.NUGET_LOCAL}}
+      - curl -sL {{.BINARY_BASE}}/dotnet-sdk-10.0-linux-x64.tar.gz
+          | tar xz -C {{.TOOLS_DIR}}/dotnet
+      - curl -sL {{.BINARY_BASE}}/Microsoft.CodeAnalysis.CSharp.4.14.0.nupkg
+          -o {{.NUGET_LOCAL}}/microsoft.codeanalysis.csharp.4.14.0.nupkg
+      - curl -sL {{.BINARY_BASE}}/Microsoft.CodeAnalysis.Common.4.14.0.nupkg
+          -o {{.NUGET_LOCAL}}/microsoft.codeanalysis.common.4.14.0.nupkg
+      - curl -sL {{.BINARY_BASE}}/Microsoft.CodeAnalysis.Analyzers.3.11.0.nupkg
+          -o {{.NUGET_LOCAL}}/microsoft.codeanalysis.analyzers.3.11.0.nupkg
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
   build:
     desc: Build the project
     cmds:
@@ -42,3 +60,16 @@ tasks:
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
       CI: "1"
+
+  publish:
+    desc: Build self-contained binaries for all platforms into ./publish
+    cmds:
+      - for: [linux-x64, linux-arm64, win-x64, win-arm64, osx-x64, osx-arm64]
+        cmd: >
+          dotnet publish {{.PROJECT}}
+          -c Release
+          -r {{.ITEM}}
+          --self-contained true
+          -o publish/{{.ITEM}}
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"

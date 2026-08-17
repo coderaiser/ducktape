@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: dotnet build src/DuckTape
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
+      - name: Lint
+        run: dotnet format src/DuckTape --verify-no-changes --severity warn
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
+      - name: Test
+        run: dotnet run --project src/DuckTape -- 'src/**/*.spec.cs'
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+          CI: "1"
