@@ -12,9 +12,6 @@
     <RootNamespace>DuckTape</RootNamespace>
     <InvariantGlobalization>true</InvariantGlobalization>
     <NuGetAudit>false</NuGetAudit>
-    <RuntimeIdentifiers>linux-x64;win-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
-    <PublishSingleFile>false</PublishSingleFile>
-    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
